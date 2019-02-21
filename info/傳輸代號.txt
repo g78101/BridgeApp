@@ -1,0 +1,27 @@
+傳輸代號
+
+{代碼}{訊息}
+
+S : 狀態 (wait-0、call-1、play-2)
+->	server S0,index
+	server S1,(先喊)
+	server S2,(王牌),(先出),(最後一個pass)
+
+M : 聊天訊息 (暫不使用
+->	client M大家好
+	server M${name}:大家好
+
+N : name
+->	client N橋牌王子
+	server N123,456,789,ABC
+
+H : 手牌
+-> server H1,2,3,4,5,6,7,8,9,10 (','隔開)
+
+C : 喊牌
+->	client C{index},(0 ~ 46)
+->	server C{lastUser},{NextUser},(0 ~ 46)
+
+P : 出牌 (牌0代表等待判別
+->	client P{index},12
+->	server P{牌},{PlayState},{NextUser}
