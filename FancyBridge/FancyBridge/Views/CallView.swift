@@ -189,7 +189,22 @@ class CallView: UIView, PokerManagerDelegate, StateManagerCallDelegate {
     
     // MARK: - Action
     @objc func touchUpInside(_ sender:UIButton) {
-        pokerManager.callTrump(sender.tag)
+        
+        if sender.tag == -1 {
+            pokerManager.callTrump(sender.tag)
+        }
+        else {
+            let message = String(format:"You will call %d%@\n",sender.tag/7+1,PokerManager.flowers[sender.tag%7])
+            
+            let cancelAction:UIAlertAction = UIAlertAction.init(title: "Cancel", style: .cancel) { (UIAlertAction) in
+                self.transform = CGAffineTransform.identity
+            }
+            let okAction:UIAlertAction = UIAlertAction.init(title: "Confirm", style: .default) { (UIAlertAction) in
+                self.pokerManager.callTrump(sender.tag)
+            }
+            
+            UIAlertController.showAlert(title: "",message: message,actions: [cancelAction,okAction])
+        }
     }
     
     // MARK: - StateManagerCallDelegate
