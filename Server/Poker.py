@@ -95,7 +95,7 @@ class Bridge:
 					elif card == 1:
 						change_number=2
 					elif card == 13 or card == 0:
-						change_number=13
+						change_number=1
 
 					if change_number > max:
 						max = change_number
