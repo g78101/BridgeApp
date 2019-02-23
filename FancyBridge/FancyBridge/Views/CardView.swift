@@ -58,6 +58,10 @@ class CardView: UIView {
         button.isEnabled = flag
     }
     
+    func resetPosition() {
+        self.transform = CGAffineTransform.identity
+    }
+    
     // MARK: - Action
     @objc func touchDown(_ sender:UIButton) {
         

@@ -61,6 +61,7 @@ class CardsView: UIView, CardViewDelegate {
     func resetCard() {
         for cardView in cards {
             cardView.isHidden = false
+            cardView.resetPosition()
         }
     }
     
