@@ -122,8 +122,11 @@ class StreamManager: NSObject, StreamDelegate {
                     }
                     else if !StateManager.getInstance().isGameOver {
                         // error func
-//                        exit(1)
-                        UIAlertController.showAlert(title: "Server Error", message: "Something is wrong")
+                        let cancelAction:UIAlertAction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                                exit(1)
+                            })
+                        
+                        UIAlertController.showAlert(title: "Server Error",message: "Something is wrong",actions: [cancelAction])
                     }
                 }
             }

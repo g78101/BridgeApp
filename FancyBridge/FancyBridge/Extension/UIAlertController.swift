@@ -22,8 +22,9 @@ extension UIAlertController {
     static func showAlert(title:String, message:String, actions:[UIAlertAction]) {
         
         let alert:UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(actions[0])
-        alert.addAction(actions[1])
+        for action in actions {
+            alert.addAction(action)
+        }
         if let viewController = UIApplication.shared.windows.first?.rootViewController as UIViewController? {
             viewController.present(alert, animated: true, completion: nil)
         }
