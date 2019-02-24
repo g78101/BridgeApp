@@ -15,6 +15,7 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var confirmButton: UIButton!
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var versionLabel: UILabel!
 
     var callView:CallView = CallView()
     var playView:PlayView = PlayView()
@@ -28,6 +29,14 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
         // Do any additional setup after loading the view, typically from a nib.
         view.addSubview(callView)
         view.addSubview(playView)
+        
+        versionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // versionLabel
+        view.addConstraint(NSLayoutConstraint(item: versionLabel, attribute: .top, relatedBy: .equal, toItem: textLabel, attribute: .bottom, multiplier: 1.0, constant: 0))
+        view.addConstraint(NSLayoutConstraint(item: versionLabel, attribute: .right, relatedBy: .equal, toItem: textLabel, attribute: .right, multiplier: 1.0, constant: 0))
+        versionLabel.addConstraint(NSLayoutConstraint(item: versionLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20))
+        versionLabel.addConstraint(NSLayoutConstraint(item: versionLabel, attribute: .width,relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 77))
         
         // callView
         view.addConstraint(NSLayoutConstraint(item: callView, attribute: .height, relatedBy: .equal, toItem: waitView, attribute: .height, multiplier: 1.0, constant: 0))
@@ -51,6 +60,9 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
         confirmButton.isEnabled = false
         
         confirmButton.addTarget(self, action: #selector(confirmClicked(_:)), for: .touchUpInside)
+        
+        let versionStr:String = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
+        versionLabel.text = versionStr
     }
 
     override func didReceiveMemoryWarning() {
