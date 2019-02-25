@@ -48,7 +48,7 @@ if __name__ == "__main__":
     # Add server socket to the list of readable connections
     CONNECTION_LIST.append(server_socket)
  
-    print "Chat server started on port " + str(PORT)
+    print "Server started on port " + str(PORT)
  
     while 1:
         # Get the list sockets which are ready to be read through select
@@ -77,7 +77,11 @@ if __name__ == "__main__":
                         CONNECTION_LIST.remove(sockfd)
                         sockfd.close()
                     else:
-                        sockfd.send(sendData("S%d,%d"%(room.state.value,len(room.sockets)-1)))
+                        try :
+                            sockfd.send(sendData("S%d,%d"%(room.state.value,len(room.sockets)-1)))
+                        except :
+                            removeRoomSockets(room)
+                        
                         # sockfd.send("S01,02,03,04,05,06,07,08,09,10,11,12,13")
             #Some incoming message from a client
             else:
