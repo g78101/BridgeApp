@@ -3,6 +3,7 @@
 import socket, select
 import random
 import Room
+import Observer
 
 def sendDataToRoom (room,message):
     for socket in room.sockets:
@@ -48,9 +49,13 @@ if __name__ == "__main__":
     # Add server socket to the list of readable connections
     CONNECTION_LIST.append(server_socket)
  
-    print "Server started on port " + str(PORT)
- 
-    while 1:
+    print "Socket server started on port " + str(PORT)
+
+    observer = Observer.HttpServer()
+    observer.start()
+ 	
+    try:
+      while 1:
         # Get the list sockets which are ready to be read through select
         read_sockets,write_sockets,error_sockets = select.select(CONNECTION_LIST,[],[])
  
@@ -62,7 +67,8 @@ if __name__ == "__main__":
 
                 CONNECTION_LIST.append(sockfd)
 
-                if len(Rooms) == 0: 
+                if len(Rooms) == 0:
+                    observer.reset()
                     Rooms.append(Room.PokerRoom())
 
                 for room in Rooms:
@@ -107,6 +113,7 @@ if __name__ == "__main__":
                                     if user != room.users[-1]:
                                         users+=","
                                 sendDataToRoom(room,sendData("N%s"%users))
+                                observer.setPlayers(users)
                                 room.dealingCards()
                                 for i in range(0,4):
                                     playCard = room.getPlayerCards(i)
@@ -115,9 +122,12 @@ if __name__ == "__main__":
                         elif connectState == "C":
                             sendStr=room.callingInfo(info)
                             sendDataToRoom(room,sendData(sendStr))
+                            observer.updateContent(sendStr)
+
                         elif connectState == "P":
                             sendStr=room.playingInfo(info)
                             sendDataToRoom(room,sendData(sendStr))
+                            observer.updateContent(sendStr)
                        
                     elif len(data) == 0:
                         # sock disconnect
@@ -125,5 +135,6 @@ if __name__ == "__main__":
                  
                 except:
                     continue
-     
-    server_socket.close()
+    except:
+      observer.stop()
+      server_socket.close()
