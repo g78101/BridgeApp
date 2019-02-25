@@ -70,15 +70,11 @@ class PokerManager: NSObject {
     }
     
     func callTrump(_ index:Int) {
-        if turnIndex == stateManager.playInfo.turnIndex {
-            streamManager.sendMessage(String(format:"C%d,%d",stateManager.playInfo.turnIndex,index))
-        }
+        streamManager.sendMessage(String(format:"C%d,%d",stateManager.playInfo.turnIndex,index))
     }
     
     func playPoker(_ index:Int) {
-        if turnIndex == stateManager.playInfo.turnIndex {
-            streamManager.sendMessage(String(format:"P%d,%d",stateManager.playInfo.turnIndex,Int(cards[index])!))
-            cards[index] = "0"
-        }
+        streamManager.sendMessage(String(format:"P%d,%d",stateManager.playInfo.turnIndex,Int(cards[index])!))
+        cards[index] = "0"
     }
 }

@@ -81,9 +81,11 @@ class CardsView: UIView, CardViewDelegate {
     
     // MARK: - CardViewDelegate
     func confirmPoker(_ index:Int) {
-        PokerManager.getInstance().playPoker(index)
-        cards[index].isHidden = true
-        setEnable(false)
+        if PokerManager.getInstance().turnIndex == StateManager.getInstance().playInfo.turnIndex {
+            PokerManager.getInstance().playPoker(index)
+            cards[index].isHidden = true
+            setEnable(false)
+        }
     }
 
 }
