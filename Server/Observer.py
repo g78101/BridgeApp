@@ -16,10 +16,12 @@ class S(BaseHTTPRequestHandler):
     nameHtml = '<div style="color:#000000; width:20%; float: left; vertical-align:middle; padding: 10px ; text-align: center; font-size:35px;">'
     callHtml = '<div style="border:1px solid #333333; width:20%; height:200px; float: left; vertical-align:middle; padding: 10px;font-size: 25px">'
     playHtml = '<div style="border:1px solid #333333; width:20%; height:400px; float: left; vertical-align:middle; padding: 10px;font-size: 25px">'
+    cardHtml = '<div align="left" style="width:80%; height:200px; float: left; vertical-align:left; padding: 10px;font-size: 25px">'
 
     players = [""] * 4
     callsRecord = [""] * 4
     playsRecord = [""] * 4
+    playsPokerHand = [[] for i in range(4)]
 
     trump = 'Waiting'
     attackIndex = [-1] * 2
@@ -67,6 +69,14 @@ class S(BaseHTTPRequestHandler):
             for temp in subPlay:
                 self.wfile.write(temp + '<br>')
             self.wfile.write('</div>')
+        # show card
+        self.wfile.write(self.cardHtml)
+        for index in range(4):
+            str = self.players[index] + '<br>'
+            for card in self.playsPokerHand[index]:
+                str += (" %d%s ,")%((card-1)%13+1,Flowers[(card-1)/13])
+            self.wfile.write(str + '<br>')
+        self.wfile.write('</div>')
 
         self.wfile.write('</body></html>')
 
@@ -101,6 +111,7 @@ class HttpServer:
         S.players = [""] * 4
         S.callsRecord = [""] * 4
         S.playsRecord = [""] * 4
+        S.playsPokerHand = [[] for i in range(4)]
 
         S.trump = 'Waiting'
         S.attackIndex = [-1] * 2
@@ -112,6 +123,11 @@ class HttpServer:
 
     def setPlayers(self,list):
         S.players = list.split(',')
+
+    def setPlayersPoker(self,index,cards):
+        cardArray = cards.split(',')
+        for card in cardArray:
+            S.playsPokerHand[index].append(int(card))
 
     def updateContent(self,str):
         connectState = str[0:1]
@@ -162,6 +178,7 @@ class HttpServer:
                 updateRecord = S.playsRecord[lastUser]
                 tempStr = ("%d%s,")%((poker-1)%13+1,Flowers[(poker-1)/13])
                 S.playsRecord[lastUser] = updateRecord + tempStr
+                S.playsPokerHand[lastUser].remove(poker)
             else:
                 if nextUser in S.attackIndex:
                     S.attackScore += 1

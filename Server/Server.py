@@ -118,6 +118,7 @@ if __name__ == "__main__":
                                 for i in range(0,4):
                                     playCard = room.getPlayerCards(i)
                                     room.sockets[i].send(sendData("H%s"%playCard))
+                                    observer.setPlayersPoker(i,playCard)
                                 sendDataToRoom(room,sendData("S%d,%d"%(room.state.value,random.randint(0,3))))
                         elif connectState == "C":
                             sendStr=room.callingInfo(info)
