@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/waitview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/waitview0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/waitview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9"/>
+
+    <TextView
+        android:id="@+id/waitState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wait State"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:background="@drawable/border"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/waitview0"
+        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+    <TextView
+        android:id="@+id/infoView"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:text=""
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:background="#DDDDDD"
+        app:layout_constraintTop_toBottomOf="@id/waitState"
+        app:layout_constraintLeft_toRightOf="@id/waitview0"
+        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+    <TextView
+        android:id="@+id/versionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="123"
+        android:textColor="#000"
+        android:textAlignment="textEnd"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/infoView"
+        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:imeOptions="actionDone"
+        android:background="@drawable/border"
+        app:layout_constraintTop_toBottomOf="@id/infoView"
+        app:layout_constraintLeft_toRightOf="@id/waitview0"
+        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_height="42dp"
+        android:layout_width="0dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="20dp"
+        android:text="Confirm"
+        android:textSize="16sp"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/editText"
+        app:layout_constraintLeft_toRightOf="@id/waitview0"
+        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+</android.support.constraint.ConstraintLayout>

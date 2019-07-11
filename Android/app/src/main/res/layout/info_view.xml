@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/infoview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7f000000">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hinfoview0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hinfoview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vinfoview0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vinfoview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/hinfoview0"
+        app:layout_constraintBottom_toBottomOf="@id/hinfoview1"
+        app:layout_constraintStart_toStartOf="@id/vinfoview0"
+        app:layout_constraintEnd_toEndOf="@id/vinfoview1"
+        android:clickable="true"
+        android:background="@drawable/inforadius">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/subhinfoview0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.45"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/subvinfoview1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/subvinfoview2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+        <android.support.constraint.Guideline
+            android:id="@+id/subvinfoview3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.75"/>
+        
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:src="@mipmap/dialogclosebtn"
+            android:layout_height="46dp"
+            android:layout_width="46dp"
+            android:background="@null"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/infoLabel0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/closeButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/subvinfoview1"/>
+
+        <TextView
+            android:id="@+id/infoLabel1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/closeButton"
+            app:layout_constraintStart_toStartOf="@id/subvinfoview1"
+            app:layout_constraintEnd_toEndOf="@id/subvinfoview2"/>
+
+        <TextView
+            android:id="@+id/infoLabel2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/closeButton"
+            app:layout_constraintStart_toStartOf="@id/subvinfoview2"
+            app:layout_constraintEnd_toEndOf="@id/subvinfoview3"/>
+
+        <TextView
+            android:id="@+id/infoLabel3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/closeButton"
+            app:layout_constraintStart_toStartOf="@id/subvinfoview3"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/infoCall0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toBottomOf="@id/infoLabel0"
+            app:layout_constraintStart_toStartOf="@id/infoLabel0"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel0"
+            app:layout_constraintBottom_toBottomOf="@id/subhinfoview0"/>
+
+        <TextView
+            android:id="@+id/infoCall1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toBottomOf="@id/infoLabel1"
+            app:layout_constraintStart_toStartOf="@id/infoLabel1"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel1"
+            app:layout_constraintBottom_toBottomOf="@id/subhinfoview0"/>
+
+        <TextView
+            android:id="@+id/infoCall2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toBottomOf="@id/infoLabel2"
+            app:layout_constraintStart_toStartOf="@id/infoLabel2"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel2"
+            app:layout_constraintBottom_toBottomOf="@id/subhinfoview0"/>
+
+        <TextView
+            android:id="@+id/infoCall3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toBottomOf="@id/infoLabel3"
+            app:layout_constraintStart_toStartOf="@id/infoLabel3"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel3"
+            app:layout_constraintBottom_toBottomOf="@id/subhinfoview0"/>
+
+        <TextView
+            android:id="@+id/infoPlay0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toTopOf="@id/subhinfoview0"
+            app:layout_constraintStart_toStartOf="@id/infoLabel0"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel0"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/infoPlay1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toTopOf="@id/subhinfoview0"
+            app:layout_constraintStart_toStartOf="@id/infoLabel1"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel1"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/infoPlay2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toTopOf="@id/subhinfoview0"
+            app:layout_constraintStart_toStartOf="@id/infoLabel2"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel2"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/infoPlay3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:background="@drawable/border"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintTop_toTopOf="@id/subhinfoview0"
+            app:layout_constraintStart_toStartOf="@id/infoLabel3"
+            app:layout_constraintEnd_toEndOf="@id/infoLabel3"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
