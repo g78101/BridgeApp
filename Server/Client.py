@@ -42,7 +42,7 @@ if __name__ == "__main__":
                     print '\nDisconnected from chat server'
                     sys.exit()
                 else :
-                    for subData in data.split("\0"):
+                    for subData in data.split("\n"):
                         if subData == "":
                             continue
                         connectState = subData[0:1]

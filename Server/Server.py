@@ -30,7 +30,7 @@ def findSocketInRoomIndex (socket):
     return -1
 
 def sendData(str):
-    return str+"\0"
+    return str+"\n"
 
 if __name__ == "__main__":
      

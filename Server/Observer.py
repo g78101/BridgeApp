@@ -7,16 +7,20 @@ import threading
 import Type
 
 Trumps = [" SA"," MD"," C"," D"," H"," S"," NT"]
-Flowers = [" D"," C"," H"," S"]
+Flowers = ["♦(D)","♣(C)","♥(H)","♠(S)"]
+Numbers = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
+
+def showPokerStr(poker):
+    return (" %s-%s,")%(Numbers[(poker-1)%13],Flowers[(poker-1)/13])
 
 class S(BaseHTTPRequestHandler):
 
     trumpHtml = '<div style="color:#000000;border:1px solid #333333; width:30%;height:200px; float: left; vertical-align:middle; padding: 10px ; text-align: center; line-height: 200px; font-size:45px">'
     scoreHtml = '<div style="color:#000000;border:1px solid #333333; width:50%;height:200px; float: left; vertical-align:middle; padding: 10px; text-align: left;font-size:30px">'
-    nameHtml = '<div style="color:#000000; width:20%; float: left; vertical-align:middle; padding: 10px ; text-align: center; font-size:35px;">'
+    nameHtml = '<div style="color:#000000; width:20%; float: left; vertical-align:middle; padding: 10px ; text-align: center; font-size:35px; height:50px; white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'
     callHtml = '<div style="border:1px solid #333333; width:20%; height:200px; float: left; vertical-align:middle; padding: 10px;font-size: 25px">'
     playHtml = '<div style="border:1px solid #333333; width:20%; height:400px; float: left; vertical-align:middle; padding: 10px;font-size: 25px">'
-    cardHtml = '<div align="left" style="width:80%; height:200px; float: left; vertical-align:left; padding: 10px;font-size: 25px">'
+    cardHtml = '<div align="left" style="width:90%; height:200px; float: left; vertical-align:left; padding: 10px;font-size: 22px">'
 
     players = [""] * 4
     callsRecord = [""] * 4
@@ -74,7 +78,7 @@ class S(BaseHTTPRequestHandler):
         for index in range(4):
             str = self.players[index] + '<br>'
             for card in self.playsPokerHand[index]:
-                str += (" %d%s ,")%((card-1)%13+1,Flowers[(card-1)/13])
+                str += showPokerStr(card)
             self.wfile.write(str + '<br>')
         self.wfile.write('</div>')
 
@@ -176,7 +180,7 @@ class HttpServer:
 
             if poker != 0:
                 updateRecord = S.playsRecord[lastUser]
-                tempStr = ("%d%s,")%((poker-1)%13+1,Flowers[(poker-1)/13])
+                tempStr = showPokerStr(poker)
                 S.playsRecord[lastUser] = updateRecord + tempStr
                 S.playsPokerHand[lastUser].remove(poker)
             else:
