@@ -116,7 +116,7 @@ class StreamManager: NSObject, StreamDelegate {
             DispatchQueue.main.async {
                 if (self.delegate != nil) {
                     if data != "" {
-                        for subData in data.split(separator: "\0") {
+                        for subData in data.split(separator: "\n") {
                             self.delegate.getData(String(subData))
                         }
                     }

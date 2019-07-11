@@ -15,11 +15,16 @@ protocol CardViewDelegate:class {
 class CardView: UIView {
     // MARK: - Const
     static var Flowers = ["♦(D)","♣(C)","♥(H)","♠(S)"]
+    static var Numbers = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
     // MARK: - UI Member
     var button:UIButton = UIButton()
     // MARK: - Member
     var pokerManager:PokerManager!
     weak var delegate:CardViewDelegate!
+    
+    static func showPokerStr(poker:Int) -> String{
+        return String(format:"%@-%@\n",Numbers[(poker-1)%13],Flowers[(poker-1)/13])
+    }
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -95,7 +100,8 @@ class CardView: UIView {
     @objc func touchUpInside(_ sender:UIButton) {
 
         let poker = Int(pokerManager.cards[self.tag])!
-        let message = String(format:"You will play %d %@\n",(poker-1)%13+1,CardView.Flowers[(poker-1)/13])
+        
+        let message = String(format:"You will play %@\n",CardView.showPokerStr(poker: poker))
         
         let cancelAction:UIAlertAction = UIAlertAction.init(title: "Cancel", style: .cancel) { (UIAlertAction) in
             self.transform = CGAffineTransform.identity

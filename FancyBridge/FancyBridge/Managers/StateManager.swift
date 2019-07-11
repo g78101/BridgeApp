@@ -80,6 +80,9 @@ class StateManager: NSObject, StreamManagerDelegate {
         players = [String]()
         gameState = .Wait
         isGameOver = false
+        if (self.delegate != nil) {
+            self.delegate.changeStateUI(gameState)
+        }
     }
     
     func connectServer() {
@@ -199,14 +202,14 @@ class StateManager: NSObject, StreamManagerDelegate {
                     }
                     
                     let updateRecord:String = pokerManager.playsRecord[lastTurn]
-                    tempStr = String(format:"%d %@\n",(poker-1)%13+1,CardView.Flowers[(poker-1)/13])
+                    tempStr = String(format:"%@",CardView.showPokerStr(poker: poker))
                     
                     pokerManager.playsRecord[lastTurn] = updateRecord + tempStr
                 }
                 break
             case .LastCard:
                 let updateRecord:String = pokerManager.playsRecord[lastTurn]
-                tempStr = String(format:"%d %@\n",(poker-1)%13+1,CardView.Flowers[(poker-1)/13])
+                tempStr = String(format:"%@",CardView.showPokerStr(poker: poker))
                 
                 pokerManager.playsRecord[lastTurn] = updateRecord + tempStr
                 
