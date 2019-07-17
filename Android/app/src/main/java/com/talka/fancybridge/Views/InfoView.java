@@ -21,6 +21,7 @@ public class InfoView extends ConstraintLayout {
     public List<TextView> nameLabels = new ArrayList<TextView>();
     public List<TextView> callLabels = new ArrayList<TextView>();
     public List<TextView> playLabels = new ArrayList<TextView>();
+    public List<TextView> flowerLabels = new ArrayList<TextView>();
 
     public InfoView(Context context) {
         super(context);
@@ -40,6 +41,10 @@ public class InfoView extends ConstraintLayout {
         playLabels.add((TextView)findViewById(R.id.infoPlay1));
         playLabels.add((TextView)findViewById(R.id.infoPlay2));
         playLabels.add((TextView)findViewById(R.id.infoPlay3));
+        flowerLabels.add((TextView)findViewById(R.id.flowerLabel0));
+        flowerLabels.add((TextView)findViewById(R.id.flowerLabel1));
+        flowerLabels.add((TextView)findViewById(R.id.flowerLabel2));
+        flowerLabels.add((TextView)findViewById(R.id.flowerLabel3));
 
         this.setOnClickListener(mCloseOnClickListener);
         closeButton.setOnClickListener(mCloseOnClickListener);
@@ -48,6 +53,7 @@ public class InfoView extends ConstraintLayout {
             nameLabels.get(i).setText(StateManager.getInstance().players[i]);
             callLabels.get(i).setText(PokerManager.getInstance().callsRecord[i]);
             playLabels.get(i).setText(PokerManager.getInstance().playsRecord[i]);
+            flowerLabels.get(i).setText(String.format("%s:%d",CardView.Flowers[i],PokerManager.getInstance().flowerCountRecord[i]));
         }
     }
 

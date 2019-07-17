@@ -21,6 +21,7 @@ public class PokerManager {
 
     public String[] callsRecord = {"","","",""};
     public String[] playsRecord = {"","","",""};
+    public int[] flowerCountRecord = {0,0,0,0};
     public int currentFlower = -1;
 
     public StreamManager streamManager;
@@ -43,6 +44,7 @@ public class PokerManager {
         cards = new String[]{"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"};
         callsRecord = new String[]{"", "", "", ""};
         playsRecord = new String[]{"", "", "", ""};
+        flowerCountRecord = new int[]{0,0,0,0};
         turnIndex = -1;
         trump = -1;
         currentFlower = -1;

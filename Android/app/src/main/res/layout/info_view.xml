@@ -12,14 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.1"/>
+        app:layout_constraintGuide_percent="0.05"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/hinfoview1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9"/>
+        app:layout_constraintGuide_percent="0.95"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/vinfoview0"
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.45"/>
+            app:layout_constraintGuide_percent="0.4"/>
 
         <android.support.constraint.Guideline
             android:id="@+id/subvinfoview1"
@@ -190,7 +190,7 @@
             app:layout_constraintTop_toTopOf="@id/subhinfoview0"
             app:layout_constraintStart_toStartOf="@id/infoLabel0"
             app:layout_constraintEnd_toEndOf="@id/infoLabel0"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/flowerLabel0"/>
 
         <TextView
             android:id="@+id/infoPlay1"
@@ -204,7 +204,7 @@
             app:layout_constraintTop_toTopOf="@id/subhinfoview0"
             app:layout_constraintStart_toStartOf="@id/infoLabel1"
             app:layout_constraintEnd_toEndOf="@id/infoLabel1"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/flowerLabel1"/>
 
         <TextView
             android:id="@+id/infoPlay2"
@@ -218,7 +218,7 @@
             app:layout_constraintTop_toTopOf="@id/subhinfoview0"
             app:layout_constraintStart_toStartOf="@id/infoLabel2"
             app:layout_constraintEnd_toEndOf="@id/infoLabel2"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toTopOf="@id/flowerLabel2"/>
 
         <TextView
             android:id="@+id/infoPlay3"
@@ -232,6 +232,50 @@
             app:layout_constraintTop_toTopOf="@id/subhinfoview0"
             app:layout_constraintStart_toStartOf="@id/infoLabel3"
             app:layout_constraintEnd_toEndOf="@id/infoLabel3"
+            app:layout_constraintBottom_toTopOf="@id/flowerLabel3"/>
+
+        <TextView
+            android:id="@+id/flowerLabel0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/subvinfoview1"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/flowerLabel1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="@id/subvinfoview1"
+            app:layout_constraintEnd_toEndOf="@id/subvinfoview2"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/flowerLabel2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="@id/subvinfoview2"
+            app:layout_constraintEnd_toEndOf="@id/subvinfoview3"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/flowerLabel3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="123"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="@id/subvinfoview3"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>

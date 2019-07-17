@@ -221,16 +221,20 @@ public class StateManager implements StreamManager.StreamManagerListener {
                         }
 
                         String updateRecord = pokerManager.playsRecord[lastTurn];
+                        int flower = (poker-1)/13;
                         tempStr = String.format("%s",CardView.showPokerStr(poker));
 
                         pokerManager.playsRecord[lastTurn] = updateRecord + tempStr;
+                        pokerManager.flowerCountRecord[flower] += 1;
                     }
                         break;
                     case LastCard:
                         String updateRecord = pokerManager.playsRecord[lastTurn];
+                        int flower = (poker-1)/13;
                         tempStr = String.format("%s",CardView.showPokerStr(poker));
 
                         pokerManager.playsRecord[lastTurn] = updateRecord + tempStr;
+                        pokerManager.flowerCountRecord[flower] += 1;
 
                         if(playInfo.turnIndex == 3) {
                             new Thread(new Runnable() {
@@ -246,7 +250,8 @@ public class StateManager implements StreamManager.StreamManagerListener {
                             }).start();
                     }
 
-                    pokerManager.currentFlower = -1;
+                        pokerManager.currentFlower = -1;
+                        pokerManager.turnIndex = -1;
 
                     break;
                     case GameOver:
