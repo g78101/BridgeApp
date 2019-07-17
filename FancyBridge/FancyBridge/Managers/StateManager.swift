@@ -202,16 +202,20 @@ class StateManager: NSObject, StreamManagerDelegate {
                     }
                     
                     let updateRecord:String = pokerManager.playsRecord[lastTurn]
+                    let flower = Int((poker-1)/13)
                     tempStr = String(format:"%@",CardView.showPokerStr(poker: poker))
                     
                     pokerManager.playsRecord[lastTurn] = updateRecord + tempStr
+                    pokerManager.flowerCountRecord[flower] += 1;
                 }
                 break
             case .LastCard:
                 let updateRecord:String = pokerManager.playsRecord[lastTurn]
+                let flower = Int((poker-1)/13)
                 tempStr = String(format:"%@",CardView.showPokerStr(poker: poker))
                 
                 pokerManager.playsRecord[lastTurn] = updateRecord + tempStr
+                pokerManager.flowerCountRecord[flower] += 1;
                 
                 if playInfo.turnIndex == 3 {
                     DispatchQueue.global().async {
@@ -221,6 +225,7 @@ class StateManager: NSObject, StreamManagerDelegate {
                 }
                 
                 pokerManager.currentFlower = -1
+                pokerManager.turnIndex = -1
                 
                 break
             case .GameOver:

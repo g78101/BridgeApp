@@ -17,6 +17,7 @@ class InfoView: UIView {
     var playersName:[UILabel] = Array<UILabel>()
     var playersCall:[UITextView] = Array<UITextView>()
     var playersPlay:[UITextView] = Array<UITextView>()
+    var flowerCount:[UILabel] = Array<UILabel>()
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -44,11 +45,14 @@ class InfoView: UIView {
             let name = UILabel()
             let call = UITextView()
             let play = UITextView()
+            let flower = UILabel()
             
             name.translatesAutoresizingMaskIntoConstraints = false
             call.translatesAutoresizingMaskIntoConstraints = false
             play.translatesAutoresizingMaskIntoConstraints = false
+            flower.translatesAutoresizingMaskIntoConstraints = false
             name.textAlignment = .center
+            flower.textAlignment = .center
             
             call.isSelectable = false
             call.isEditable = false
@@ -63,19 +67,21 @@ class InfoView: UIView {
             playersName.append(name)
             playersCall.append(call)
             playersPlay.append(play)
+            flowerCount.append(flower)
             
             main.addSubview(name)
             main.addSubview(call)
             main.addSubview(play)
+            main.addSubview(flower)
             
-            name.text = StateManager.getInstance().players[i]
+//            name.text = StateManager.getInstance().players[i]
         }
         
         self.addSubview(backgroundButton)
         self.addSubview(main)
         self.addSubview(closeButton)
         
-        let metrics = ["verticalSpace": 75,
+        let metrics = ["verticalSpace": 50,
                        "horizontalSpace": 15]
         
         let views:[String : Any] = ["main" : main,"backgroundButton" : backgroundButton]
@@ -127,10 +133,16 @@ class InfoView: UIView {
             addConstraint(NSLayoutConstraint(item: playersPlay[i], attribute: .top, relatedBy: .equal, toItem: playersCall[i], attribute: .bottom, multiplier: 1.0, constant: 10))
             addConstraint(NSLayoutConstraint(item: playersPlay[i], attribute: .centerX, relatedBy: .equal, toItem: playersCall[i], attribute: .centerX, multiplier: 1.0, constant: 0))
             addConstraint(NSLayoutConstraint(item: playersPlay[i], attribute: .width, relatedBy: .equal, toItem: playersCall[i], attribute: .width, multiplier: 1.0, constant: 0))
-            addConstraint(NSLayoutConstraint(item: playersPlay[i], attribute: .bottom, relatedBy: .equal, toItem: main, attribute: .bottom, multiplier: 1.0, constant: -10))
+            addConstraint(NSLayoutConstraint(item: playersPlay[i], attribute: .bottom, relatedBy: .equal, toItem: flowerCount[i], attribute: .top, multiplier: 1.0, constant: 0))
+            
+            addConstraint(NSLayoutConstraint(item: flowerCount[i], attribute: .bottom, relatedBy: .equal, toItem: main, attribute: .bottom, multiplier: 1.0, constant: -10))
+            addConstraint(NSLayoutConstraint(item: flowerCount[i], attribute: .centerX, relatedBy: .equal, toItem: playersCall[i], attribute: .centerX, multiplier: 1.0, constant: 0))
+            addConstraint(NSLayoutConstraint(item: flowerCount[i], attribute: .width, relatedBy: .equal, toItem: playersCall[i], attribute: .width, multiplier: 1.0, constant: 0))
+            addConstraint(NSLayoutConstraint(item: flowerCount[i], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30))
             
             playersCall[i].text = PokerManager.getInstance().callsRecord[i]
             playersPlay[i].text = PokerManager.getInstance().playsRecord[i]
+            flowerCount[i].text = String(format:"%@:%d",CardView.Flowers[i],PokerManager.getInstance().flowerCountRecord[i])
         }
     }
     

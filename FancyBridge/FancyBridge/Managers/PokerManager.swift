@@ -27,6 +27,7 @@ class PokerManager: NSObject {
     var cards:[String] = [String]()
     var callsRecord:[String] = ["","","",""]
     var playsRecord:[String] = ["","","",""]
+    var flowerCountRecord:[Int] = [0,0,0,0]
     var turnIndex:Int = -1
     var trump:Int = -1
     var currentFlower = -1
@@ -54,6 +55,7 @@ class PokerManager: NSObject {
         cards.removeAll()
         callsRecord = ["","","",""]
         playsRecord = ["","","",""]
+        flowerCountRecord = [0,0,0,0]
         turnIndex = -1
         trump = -1
         currentFlower = -1
