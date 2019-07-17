@@ -53,6 +53,7 @@ class InfoView: UIView {
             flower.translatesAutoresizingMaskIntoConstraints = false
             name.textAlignment = .center
             flower.textAlignment = .center
+            flower.font = UIFont.systemFont(ofSize: 12)
             
             call.isSelectable = false
             call.isEditable = false
@@ -73,8 +74,6 @@ class InfoView: UIView {
             main.addSubview(call)
             main.addSubview(play)
             main.addSubview(flower)
-            
-//            name.text = StateManager.getInstance().players[i]
         }
         
         self.addSubview(backgroundButton)
@@ -140,6 +139,7 @@ class InfoView: UIView {
             addConstraint(NSLayoutConstraint(item: flowerCount[i], attribute: .width, relatedBy: .equal, toItem: playersCall[i], attribute: .width, multiplier: 1.0, constant: 0))
             addConstraint(NSLayoutConstraint(item: flowerCount[i], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30))
             
+            playersName[i].text = StateManager.getInstance().players[i]
             playersCall[i].text = PokerManager.getInstance().callsRecord[i]
             playersPlay[i].text = PokerManager.getInstance().playsRecord[i]
             flowerCount[i].text = String(format:"%@:%d",CardView.Flowers[i],PokerManager.getInstance().flowerCountRecord[i])
