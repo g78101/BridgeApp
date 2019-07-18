@@ -37,6 +37,13 @@ public class MainActivity extends AppCompatActivity implements StateManager.Stat
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        StateManager.getInstance().interruptConnect();
+    }
+
+    @Override
     public void updateWaitingUI(String text) {
         mWaitView.updateInfo(text);
     }

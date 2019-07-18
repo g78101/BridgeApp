@@ -83,50 +83,57 @@ public class StreamManager {
                 while (clientSocket.isConnected()) {
                     tmp = br.readLine();
 
-                    final CountDownLatch latch = new CountDownLatch(1);
-                    Handler mainHandler = new Handler(Looper.getMainLooper());
-                    Runnable myRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            if (listener != null) {
-                                if(tmp!=null && !tmp.equals("is Full")) {
+                    if(tmp!=null && !tmp.equals("is Full")) {
+                        final CountDownLatch latch = new CountDownLatch(1);
+                        Handler mainHandler = new Handler(Looper.getMainLooper());
+                        Runnable myRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                if (listener != null) {
                                     listener.getData(tmp);
                                 }
-                                else if(!StateManager.getInstance().isGameOver) {
-                                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                                    alert.setTitle("Server Error");
-                                    alert.setMessage("Something is wrong");
-                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            exit(1);
-                                        }
-                                    });
-                                    alert.show();
-                                }
-
+                                latch.countDown();
                             }
-                            latch.countDown();
-                        }
-                    };
-                    mainHandler.post(myRunnable);
-                    latch.await();
+                        };
+                        mainHandler.post(myRunnable);
+                        latch.await();
+                    }
+                    else if(!StateManager.getInstance().isGameOver) {
+                        throw new Exception("Exception thrown");
+                    }
+
                     if(tmp==null) {
                         break;
                     }
                 }
             }catch(Exception e){
                 e.printStackTrace();
-                Log.e("text","Socket連線="+e.toString());
+
+                Handler mainHandler = new Handler(Looper.getMainLooper());
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                        alert.setTitle("Server Error");
+                        alert.setMessage("Something is wrong");
+                        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                exit(1);
+                            }
+                        });
+                        alert.show();
+                    }
+                };
+                mainHandler.post(myRunnable);
             }
         }
     };
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-
+    public void disconnect() {
         try {
+            bw.write("");
+            bw.flush();
             bw.close();
             br.close();
             clientSocket.close();

@@ -109,7 +109,7 @@ public class StateManager implements StreamManager.StreamManagerListener {
 
     public void interruptConnect() {
         try {
-            streamManager.finalize();
+            streamManager.disconnect();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
