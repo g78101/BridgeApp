@@ -3,6 +3,8 @@ package com.talka.fancybridge.Views;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -184,14 +186,12 @@ public class CallView extends ConstraintLayout implements PokerManager.PokerMana
 
     public void setBtnEnable(ImageButton btn,boolean isEnable) {
         if (isEnable) {
-//            btn.setImageAlpha(255);
-//            btn.setEnabled(true);
-            btn.setVisibility(VISIBLE);
+            btn.getBackground().setColorFilter(null);
+            btn.setEnabled(true);
         }
         else {
-//            btn.setImageAlpha(50);
-//            btn.setEnabled(false);
-            btn.setVisibility(INVISIBLE);
+            btn.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+            btn.setEnabled(false);
         }
     }
 

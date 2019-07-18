@@ -24,6 +24,9 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
     static String[] TunrArray = {"↓","←","↑","→"};
 
     private CardsView cardsView;
+    private CardsView rightCardsView;
+    private CardsView leftCardsView;
+    private CardsView topCardsView;
     private TextView turnView;
     private List<ImageView> tablePokers = new ArrayList<ImageView>();
     private TextView teamInfo;
@@ -54,6 +57,9 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
         View view = inflate.inflate(R.layout.play_view, this, true);
 
         cardsView = (CardsView) findViewById(R.id.playcards);
+        rightCardsView = (CardsView) findViewById(R.id.rightCards);
+        leftCardsView = (CardsView) findViewById(R.id.leftCards);
+        topCardsView = (CardsView) findViewById(R.id.topCards);
         trump = (TextView) findViewById(R.id.trumpText);
         history = (Button) findViewById(R.id.historyBtn);
         teamInfo = (TextView) findViewById(R.id.teamInfo);
@@ -87,6 +93,9 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
         stateManager = StateManager.getInstance();
         stateManager.playListener = this;
         cardsView.setEnable(false);
+        rightCardsView.otherPlayer();
+        leftCardsView.otherPlayer();
+        topCardsView.otherPlayer();
     }
 
     @Override
@@ -101,6 +110,9 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
                 cardsView.setEnable(true);
             }
             cardsView.resetCard();
+            leftCardsView.resetCard();
+            topCardsView.resetCard();
+            rightCardsView.resetCard();
 
             updateTitleView();
             updateScoreView();
@@ -155,17 +167,17 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
             k=(k+1)%4;
         }
 
-//        if(lastUser != myTurnIndex && poker != 0) {
-//            if (myTurnIndex+1)%4 == lastUser {
-//                leftCardsView.playingCard()
-//            }
-//            else if (myTurnIndex+2)%4 == lastUser {
-//                topCardsView.playingCard()
-//            }
-//            else {
-//                rightCardsView.playingCard()
-//            }
-//        }
+        if(lastUser != myTurnIndex && poker != 0) {
+            if((myTurnIndex+1)%4 == lastUser) {
+                leftCardsView.playingCard();
+            }
+            else if((myTurnIndex+2)%4 == lastUser) {
+                topCardsView.playingCard();
+            }
+            else {
+                rightCardsView.playingCard();
+            }
+        }
 
         updateTurnView(type);
 
