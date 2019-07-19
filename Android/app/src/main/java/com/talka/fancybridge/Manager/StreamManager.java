@@ -98,7 +98,7 @@ public class StreamManager {
                         mainHandler.post(myRunnable);
                         latch.await();
                     }
-                    else if(!StateManager.getInstance().isGameOver) {
+                    else {
                         throw new Exception("Exception thrown");
                     }
 
@@ -109,23 +109,25 @@ public class StreamManager {
             }catch(Exception e){
                 e.printStackTrace();
 
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-                Runnable myRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                        alert.setTitle("Server Error");
-                        alert.setMessage("Something is wrong");
-                        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                exit(1);
-                            }
-                        });
-                        alert.show();
-                    }
-                };
-                mainHandler.post(myRunnable);
+                if(!StateManager.getInstance().isGameOver) {
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
+                    Runnable myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            alert.setTitle("Server Error");
+                            alert.setMessage("Something is wrong");
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    exit(1);
+                                }
+                            });
+                            alert.show();
+                        }
+                    };
+                    mainHandler.post(myRunnable);
+                }
             }
         }
     };
