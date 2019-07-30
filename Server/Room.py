@@ -66,7 +66,7 @@ class PokerRoom:
 			returnStr = "S2,%d,%d,%d"%(self.bridge.trump,(self.trump_type_who_call_fast[self.bridge.trump%7]+1)%4,lastUser)
 			self.bridge.bout = 0
 		else:
-			if self.bridge.trump==-1 and self.bridge.bout == 3:
+			if self.bridge.trump==-1 and self.bridge.bout == 3 and nowCall == -1:
 				nextuser = random.randint(0,3)
 				self.bridge.bout = 0
 			else:
