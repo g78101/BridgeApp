@@ -8,8 +8,9 @@
 
 import UIKit
 
-let ServerURL = "127.0.0.1"
-let ServerPort = 9999
+let ServerURL = "talkaying.ga"
+//let ServerURL = "127.0.0.1"
+let ServerPort = 8888
 let bufferSize = 1024
 
 protocol StreamManagerDelegate:class {

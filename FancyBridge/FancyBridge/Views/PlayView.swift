@@ -10,22 +10,28 @@ import UIKit
 
 class PlayView: UIView, StateManagerPlayDelegate {
     // MARK: - Const
-    static let TrumpText = "%d%@!!!"
-    static let TeamInfoText = "  Our Team\n\t\t\t\t\t%d / %d\n  Enemy Team\n\t\t\t\t\t%d / %d"
-    static let TunrArray = ["↓","←","↑","→"]
+    static let TrumpType = ["border-small","border-middle","border-clubs","border-diamand","border-heart","border-spade","border-notrump"]
+    static let TeamInfoText = "Our Team: %d/%d\nEnemy Team: %d/%d"
+    static let TunrArray = [0,CGFloat(90.0 * Float.pi / 180.0),CGFloat(180 * Float.pi / 180.0),CGFloat(270.0 * Float.pi / 180.0)]
     
     // MARK: - UI Member
     var cardsView:CardsView = CardsView()
     var rightCardsView:CardsView = CardsView()
     var leftCardsView:CardsView = CardsView()
     var topCardsView:CardsView = CardsView()
-    var turnView:UILabel = UILabel()
-    var tablePokers:[UIImageView] = Array<UIImageView>()
+    var turnView:UIImageView = UIImageView()
+    var tableIndex:[UILabel] = Array<UILabel>()
+    var tablePokers:[CardView] = Array<CardView>()
     var titleView:UIView = UIView()
     var teamInfo:UILabel = UILabel()
-    var trump:UILabel = UILabel()
+    var trumpNumber:UILabel = UILabel()
+    var trumpType:UIImageView = UIImageView()
+    var lineView:UIView = UIView()
     var history:UIButton = UIButton()
-    var again:UIButton = UIButton()
+    var finishView:FinishView = FinishView()
+    
+    var judgeTimer:Timer?
+    var animationIndex:Int = -1
     
     // MARK: - Member
     var pokerManager:PokerManager!
@@ -39,158 +45,198 @@ class PlayView: UIView, StateManagerPlayDelegate {
         stateManager = StateManager.getInstance()
         
         self.isHidden = true
-        self.backgroundColor = UIColor.green
         
         self.translatesAutoresizingMaskIntoConstraints = false
         turnView.translatesAutoresizingMaskIntoConstraints = false
         titleView.translatesAutoresizingMaskIntoConstraints = false
         teamInfo.translatesAutoresizingMaskIntoConstraints = false
-        trump.translatesAutoresizingMaskIntoConstraints = false
+        trumpNumber.translatesAutoresizingMaskIntoConstraints = false
+        trumpType.translatesAutoresizingMaskIntoConstraints = false
         history.translatesAutoresizingMaskIntoConstraints = false
-        again.translatesAutoresizingMaskIntoConstraints = false
+        lineView.translatesAutoresizingMaskIntoConstraints = false
+        finishView.translatesAutoresizingMaskIntoConstraints = false
+        
         self.addSubview(cardsView)
         self.addSubview(leftCardsView)
         self.addSubview(topCardsView)
         self.addSubview(rightCardsView)
         self.addSubview(turnView)
-        self.addSubview(again)
+        self.addSubview(history)
         
         self.addSubview(titleView)
-        titleView.addSubview(trump)
-        titleView.addSubview(history)
+        titleView.addSubview(trumpNumber)
+        titleView.addSubview(trumpType)
+        titleView.addSubview(lineView)
         titleView.addSubview(teamInfo)
         
         for _ in 0..<4 {
-            let imageView:UIImageView = UIImageView()
-            imageView.translatesAutoresizingMaskIntoConstraints = false
-//            imageView.layer.borderWidth = 1.0
+            let cardView:CardView = CardView()
+            cardView.translatesAutoresizingMaskIntoConstraints = false
+            cardView.setEnable(false)
+            tablePokers.append(cardView)
+            self.addSubview(cardView)
             
-            tablePokers.append(imageView)
-            self.addSubview(imageView)
+            let indexText:UILabel = UILabel()
+            indexText.translatesAutoresizingMaskIntoConstraints = false
+            indexText.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+            indexText.textColor = UIColor.white
+            indexText.textAlignment = .center
+            
+            tableIndex.append(indexText)
+            self.addSubview(indexText)
         }
+        self.addSubview(finishView)
         
         history.addTarget(self, action: #selector(self.touchUpInside(_:)), for: .touchUpInside)
         
         leftCardsView.otherPlayer()
-        topCardsView.otherPlayer()
+        leftCardsView.setSmallFont()
+        leftCardsView.setEnable(false)
         rightCardsView.otherPlayer()
-        turnView.text = ""
+        rightCardsView.setSmallFont()
+        rightCardsView.setEnable(false)
+        topCardsView.setSmallFont()
+        topCardsView.setEnable(false)
+        turnView.image = UIImage(named: "turn")
         
-        trump.textAlignment = .center
-        trump.font = UIFont.boldSystemFont(ofSize: 17)
+        trumpNumber.textAlignment = .center
+        trumpNumber.font = UIFont.systemFont(ofSize: 40, weight: .medium)
+        trumpNumber.textColor = UIColor.white
+        
+        lineView.backgroundColor = UIColor(red: 53.0/255, green: 182.0/255, blue: 128.0/255, alpha: 1.0)
         
         teamInfo.numberOfLines = 0
         teamInfo.adjustsFontSizeToFitWidth = true
+        teamInfo.textColor = UIColor.white
+        teamInfo.font = UIFont.systemFont(ofSize: 17)
         
-        history.setTitle("History", for: .normal)
-        history.setTitleColor(UIColor.black, for: .normal)
+        finishView.isHidden = true
         
-        again.setTitle("Play Again", for: .normal)
-        again.setBackgroundColor(UIColor(red: 1.0, green: 250.0/255, blue: 201.0/255, alpha: 1.0), for: .normal)
-        again.setTitleColor(UIColor.black, for: .normal)
-        again.isHidden = true
-        again.addTarget(self, action: #selector(reconnect(_:)), for: .touchUpInside)
-        again.layer.cornerRadius = 10.0
-        again.layer.masksToBounds = true
-        
-        trump.layer.borderWidth = 1.0
-        trump.layer.cornerRadius = 10.0
-        history.layer.borderWidth = 1.0
-        history.layer.cornerRadius = 10.0
-        teamInfo.layer.borderWidth = 1.0
-        teamInfo.layer.cornerRadius = 10.0
-        
-        titleView.backgroundColor = UIColor(white: 241.0/255, alpha: 1.0)
-        history.setBackgroundColor( UIColor.lightGray, for: .normal)
-        history.setTitleColor(UIColor.lightText, for: .highlighted)
-        history.layer.masksToBounds = true
+        titleView.backgroundColor = UIColor(red: 0, green: 146.0/255, blue: 87.0/255, alpha: 1.0)
+        history.setBackgroundImage(UIImage(named: "history-btn"), for: .normal)
         
         // cardsView
-        addConstraint(NSLayoutConstraint(item: cardsView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -50))
+        addConstraint(NSLayoutConstraint(item: cardsView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -15))
         addConstraint(NSLayoutConstraint(item: cardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
         addConstraint(NSLayoutConstraint(item: cardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.95, constant: 0))
         addConstraint(NSLayoutConstraint(item: cardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 3, constant: 0))
         
-        // again
-        addConstraint(NSLayoutConstraint(item: again, attribute: .bottom, relatedBy: .equal, toItem: cardsView, attribute: .top, multiplier: 1.0, constant: 20))
-        addConstraint(NSLayoutConstraint(item: again, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
-        again.addConstraint(NSLayoutConstraint(item: again, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 100))
-        again.addConstraint(NSLayoutConstraint(item: again, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0 * 3, constant: 40))
+        // finishView
+        addConstraint(NSLayoutConstraint(item: finishView, attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: finishView, attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: -13))
+        addConstraint(NSLayoutConstraint(item: finishView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 300))
+        addConstraint(NSLayoutConstraint(item: finishView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 421))
+        
+        let move:CGFloat = ( UIScreen.main.bounds.size.height > 568 ) ? 145 : 125
         
         // leftCardsView
-        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0))
-        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: -125))
+        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 20))
+        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: -1 * move))
         addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
         addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
         leftCardsView.transform = CGAffineTransform(rotationAngle: CGFloat(90.0 * Float.pi / 180.0) )
         
         // topCardsView
-        addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: -125))
+        addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: 35))
         addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
         addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
         addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
-        topCardsView.transform = CGAffineTransform(rotationAngle: CGFloat(180.0 * Float.pi / 180.0) )
-
+        
         // rightCardsView
-        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0))
-        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 125))
+        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: -20))
+        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: move))
         addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
         addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
         rightCardsView.transform = CGAffineTransform(rotationAngle: CGFloat(270.0 * Float.pi / 180.0) )
         
         // turnView
-        addConstraint(NSLayoutConstraint(item: turnView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: turnView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 35))
         addConstraint(NSLayoutConstraint(item: turnView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
-        turnView.addConstraint(NSLayoutConstraint(item: turnView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20))
-        turnView.addConstraint(NSLayoutConstraint(item: turnView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20))
+        turnView.addConstraint(NSLayoutConstraint(item: turnView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70))
+        turnView.addConstraint(NSLayoutConstraint(item: turnView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70))
+        
+        // tableIndex[0]
+        addConstraint(NSLayoutConstraint(item: tableIndex[0], attribute: .top, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: 13))
+        addConstraint(NSLayoutConstraint(item: tableIndex[0], attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        tableIndex[0].addConstraint(NSLayoutConstraint(item: tableIndex[0], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 10))
+        tableIndex[0].addConstraint(NSLayoutConstraint(item: tableIndex[0], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 16))
+        // tableIndex[1]
+        addConstraint(NSLayoutConstraint(item: tableIndex[1], attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: tableIndex[1], attribute: .right, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: -14))
+        tableIndex[1].addConstraint(NSLayoutConstraint(item: tableIndex[1], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 10))
+        tableIndex[1].addConstraint(NSLayoutConstraint(item: tableIndex[1], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 16))
+        
+        // tableIndex[2]
+        addConstraint(NSLayoutConstraint(item: tableIndex[2], attribute: .bottom, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: -13))
+        addConstraint(NSLayoutConstraint(item: tableIndex[2], attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        tableIndex[2].addConstraint(NSLayoutConstraint(item: tableIndex[2], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 10))
+        tableIndex[2].addConstraint(NSLayoutConstraint(item: tableIndex[2], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 16))
+        
+        // tableIndex[3]
+        addConstraint(NSLayoutConstraint(item: tableIndex[3], attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: tableIndex[3], attribute: .left, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 14))
+        tableIndex[3].addConstraint(NSLayoutConstraint(item: tableIndex[3], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 10))
+        tableIndex[3].addConstraint(NSLayoutConstraint(item: tableIndex[3], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 16))
         
         // tablePokers[0]
-        addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 40))
-        addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
-        tablePokers[0].addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35))
-        tablePokers[0].addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60))
+        addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .top, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: 40))
+        addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        tablePokers[0].addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 46))
+        tablePokers[0].addConstraint(NSLayoutConstraint(item: tablePokers[0], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70))
         
         // tablePokers[1]
-        addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0))
-        addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: -35))
-        tablePokers[1].addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35))
-        tablePokers[1].addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60))
+        addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .right, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: -40))
+        tablePokers[1].addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 46))
+        tablePokers[1].addConstraint(NSLayoutConstraint(item: tablePokers[1], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70))
         
         // tablePokers[2]
-        addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: -40))
-        addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
-        tablePokers[2].addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35))
-        tablePokers[2].addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60))
+        addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .bottom, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: -40))
+        addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        tablePokers[2].addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 46))
+        tablePokers[2].addConstraint(NSLayoutConstraint(item: tablePokers[2], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70))
         
         // tablePokers[3]
-        addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0))
-        addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 35))
-        tablePokers[3].addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35))
-        tablePokers[3].addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60))
+        addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .left, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 40))
+        tablePokers[3].addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 46))
+        tablePokers[3].addConstraint(NSLayoutConstraint(item: tablePokers[3], attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70))
+        
+        // history
+        addConstraint(NSLayoutConstraint(item: history, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -5))
+        addConstraint(NSLayoutConstraint(item: history, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -10))
+        addConstraint(NSLayoutConstraint(item: history, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40))
+        addConstraint(NSLayoutConstraint(item: history, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40))
         
         // titleView
         addConstraint(NSLayoutConstraint(item: titleView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0))
         addConstraint(NSLayoutConstraint(item: titleView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 0))
         addConstraint(NSLayoutConstraint(item: titleView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0))
-        addConstraint(NSLayoutConstraint(item: titleView, attribute: .bottom, relatedBy: .equal, toItem: topCardsView, attribute: .top, multiplier: 1.0, constant: -20))
+        addConstraint(NSLayoutConstraint(item: titleView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 95))
         
-        // trump
-        titleView.addConstraint(NSLayoutConstraint(item: trump, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .top, multiplier: 1.0, constant: 40))
-        titleView.addConstraint(NSLayoutConstraint(item: trump, attribute: .left, relatedBy: .equal, toItem: titleView, attribute: .left, multiplier: 1.0, constant: 10))
-        titleView.addConstraint(NSLayoutConstraint(item: trump, attribute: .width, relatedBy: .equal, toItem: titleView, attribute: .width, multiplier: 0.3333, constant: 0))
-        trump.addConstraint(NSLayoutConstraint(item: trump, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30))
+        // lineView
+        titleView.addConstraint(NSLayoutConstraint(item: lineView, attribute: .centerX, relatedBy: .equal, toItem: titleView, attribute: .centerX, multiplier: 1.0, constant: 0))
+        titleView.addConstraint(NSLayoutConstraint(item: lineView, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .top, multiplier: 1.0, constant: 42))
+        titleView.addConstraint(NSLayoutConstraint(item: lineView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 1))
+        titleView.addConstraint(NSLayoutConstraint(item: lineView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 33))
         
-        // history
-        titleView.addConstraint(NSLayoutConstraint(item: history, attribute: .top, relatedBy: .equal, toItem: trump, attribute: .bottom, multiplier: 1.0, constant: 10))
-        titleView.addConstraint(NSLayoutConstraint(item: history, attribute: .left, relatedBy: .equal, toItem: trump, attribute: .left, multiplier: 1.0, constant: 10))
-        titleView.addConstraint(NSLayoutConstraint(item: history, attribute: .right, relatedBy: .equal, toItem: trump, attribute: .right, multiplier: 1.0, constant: -10))
-        titleView.addConstraint(NSLayoutConstraint(item: history, attribute: .bottom, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: -5))
+        // trumpNumber
+        titleView.addConstraint(NSLayoutConstraint(item: trumpNumber, attribute: .centerY, relatedBy: .equal, toItem: lineView, attribute: .centerY, multiplier: 1.0, constant: 0))
+        titleView.addConstraint(NSLayoutConstraint(item: trumpNumber, attribute: .right, relatedBy: .equal, toItem: trumpType, attribute: .left, multiplier: 1.0, constant: -3))
+        titleView.addConstraint(NSLayoutConstraint(item: trumpNumber, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 25))
+        titleView.addConstraint(NSLayoutConstraint(item: trumpNumber, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 48))
+        
+        // trumpType
+        titleView.addConstraint(NSLayoutConstraint(item: trumpType, attribute: .centerY, relatedBy: .equal, toItem: lineView, attribute: .centerY, multiplier: 1.0, constant: 0))
+        titleView.addConstraint(NSLayoutConstraint(item: trumpType, attribute: .right, relatedBy: .equal, toItem: lineView, attribute: .left, multiplier: 1.0, constant: -39))
+        titleView.addConstraint(NSLayoutConstraint(item: trumpType, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50))
+        titleView.addConstraint(NSLayoutConstraint(item: trumpNumber, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 32))
         
         // teamInfo
-        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .top, relatedBy: .equal, toItem: trump, attribute: .top, multiplier: 1.0, constant: 0))
-        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .left, relatedBy: .equal, toItem: trump, attribute: .right, multiplier: 1.0, constant: 10))
-        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .right, relatedBy: .equal, toItem: titleView, attribute: .right, multiplier: 1.0, constant: -10))
-        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .bottom, relatedBy: .equal, toItem: history, attribute: .bottom, multiplier: 1.0, constant: 0))
+        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .centerY, relatedBy: .equal, toItem: lineView, attribute: .centerY, multiplier: 1.0, constant: 0))
+        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .centerX, relatedBy: .equal, toItem: lineView, attribute: .centerX, multiplier: 1.55, constant: 0))
+        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .width, relatedBy: .equal, toItem: titleView, attribute: .width, multiplier: 0.45, constant: 0))
+        titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50))
         
         cardsView.setEnable(false)
         stateManager.playDelegate = self
@@ -207,28 +253,63 @@ class PlayView: UIView, StateManagerPlayDelegate {
         }
         set (setHidden) {
             super.isHidden = setHidden
-            
+            LoadingView.StopLoading()
+            InfoView.clear()
             if !setHidden {
                 cardsView.setHandCards(pokerManager.cards)
+                cardsView.tag = stateManager.playInfo.turnIndex
+                leftCardsView.tag = (stateManager.playInfo.turnIndex+1)%4
+                topCardsView.tag = (stateManager.playInfo.turnIndex+2)%4
+                rightCardsView.tag = (stateManager.playInfo.turnIndex+3)%4
                 
-                if stateManager.playInfo.turnIndex == pokerManager.turnIndex {
-                    cardsView.setEnable(true)
-                }
                 cardsView.resetCard()
                 leftCardsView.resetCard()
                 topCardsView.resetCard()
                 rightCardsView.resetCard()
                 
+                // Three Mode
+                if pokerManager.threeMode && pokerManager.twoCardsPlay() {
+                    topCardsView.setHandCards(pokerManager.otherCards)
+                    topCardsView.transform = CGAffineTransform.init(scaleX: 1.6, y: 1.6)
+                }
+                else {
+                    topCardsView.otherPlayer()
+                    topCardsView.transform = CGAffineTransform(rotationAngle: CGFloat(180.0 * Float.pi / 180.0) )
+                }
+                
+                cardsView.checkCardsPlay()
+                topCardsView.checkCardsPlay()
+
+                if pokerManager.comIndex == leftCardsView.tag {
+                    leftCardsView.setHandCards(pokerManager.otherCards)
+                }
+                else {
+                    leftCardsView.otherPlayer()
+                }
+                if pokerManager.comIndex == rightCardsView.tag {
+                    rightCardsView.setHandCards(pokerManager.otherCards)
+                }
+                else {
+                    rightCardsView.otherPlayer()
+                }
+                
                 updateTitleView()
                 updateScoreView()
                 updateTurnView(-1)
+                
+                var k = stateManager.playInfo.turnIndex
+                for i in 0..<4 {
+                    tableIndex[i].text = String(format:"%d",k+1)
+                    k=(k+1)%4
+                }
             }
         }
     }
     
     // MARK: - Functions
     func updateTitleView() {
-        trump.text = String(format:PlayView.TrumpText,pokerManager.trump/7+1,PokerManager.flowers[pokerManager.trump%7])
+        trumpNumber.text = String(format:"%d",pokerManager.trump/7+1)
+        trumpType.image = UIImage(named: PlayView.TrumpType[pokerManager.trump%7])
     }
     
     func updateScoreView() {
@@ -237,49 +318,64 @@ class PlayView: UIView, StateManagerPlayDelegate {
     
     func updateTurnView(_ type:Int) {
         
+        if (judgeTimer != nil) {
+            judgeTimer?.invalidate()
+            judgeTimer = nil
+        }
+        
+        for i in 0..<4 {
+            tableIndex[i].textColor = UIColor.white
+        }
+        
         if type == -1 || type == PlayState.Normal.rawValue {
             var k = stateManager.playInfo.turnIndex
             for i in 0..<4 {
                 if k==pokerManager.turnIndex {
-                    turnView.text = PlayView.TunrArray[i]
+                    turnView.transform = CGAffineTransform(rotationAngle:PlayView.TunrArray[i] )
+                    tableIndex[i].textColor = UIColor.black
                     break
                 }
                 k=(k+1)%4
             }
+            animationIndex = (pokerManager.turnIndex+1)%4
         }
         else {
-            turnView.text = "⊕"
+            judgeTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(self.turnViewAnimation), userInfo: nil, repeats: true)
         }
     }
-
-    // MARK: - Action
-    @objc func touchUpInside(_ sender:UIButton) {
-        
-        let infoView = InfoView()
-        
-        infoView.addToTopView()
+    
+    @objc func turnViewAnimation() {
+        turnView.transform = CGAffineTransform(rotationAngle:PlayView.TunrArray[animationIndex] )
+        for i in 0..<4 {
+            tableIndex[i].textColor = UIColor.white
+        }
+        tableIndex[animationIndex].textColor = UIColor.black
+        animationIndex = (animationIndex+1)%4
     }
     
-    @objc func reconnect(_ sender:UIButton) {
-        again.isHidden = true
-        pokerManager.reset()
-        stateManager.reset()
-        stateManager.connectServer()
+    
+    // MARK: - Action
+    @objc func touchUpInside(_ sender:UIButton) {
+        InfoView.show()
     }
     
     // MARK: - StateManagerPlayDelegate
     func updatePlayingUI(_ poker: Int, _ type: Int, _ lastUser: Int) {
         
         let myTurnIndex = stateManager.playInfo.turnIndex
-        cardsView.setEnable(myTurnIndex == pokerManager.turnIndex)
+        cardsView.checkCardsPlay()
+        
+        if pokerManager.twoCardsPlay() {
+            topCardsView.checkCardsPlay()
+        }
         
         var k = myTurnIndex
         for i in 0..<4 {
             if poker == 0 {
-                tablePokers[i].image = nil
+                tablePokers[i].setCard(-1)
             }
             else if k==lastUser {
-                tablePokers[i].image = UIImage(named:String(format:"Card%d",poker))
+                tablePokers[i].setCard(poker)
                 break
             }
             k=(k+1)%4
@@ -287,20 +383,33 @@ class PlayView: UIView, StateManagerPlayDelegate {
         
         if lastUser != myTurnIndex && poker != 0 {
             if (myTurnIndex+1)%4 == lastUser {
-                leftCardsView.playingCard()
+                if pokerManager.comIndex == leftCardsView.tag {
+                    leftCardsView.setCardHidden(poker)
+                }
+                else {
+                    leftCardsView.playingCard()
+                }
             }
             else if (myTurnIndex+2)%4 == lastUser {
-                topCardsView.playingCard()
+                if !pokerManager.twoCardsPlay() {
+                    topCardsView.playingCard()
+                }
             }
             else {
-                rightCardsView.playingCard()
+                if pokerManager.comIndex == rightCardsView.tag {
+                    rightCardsView.setCardHidden(poker)
+                }
+                else {
+                    rightCardsView.playingCard()
+                }
             }
         }
         
         updateTurnView(type)
         
         if poker == 0 {
-            
+            cardsView.checkCardsPlay()
+            topCardsView.checkCardsPlay()
             if (lastUser==myTurnIndex||lastUser==(myTurnIndex+2)%4) {
                 pokerManager.enemyScroe += 1
             }
@@ -312,13 +421,8 @@ class PlayView: UIView, StateManagerPlayDelegate {
             
             if (stateManager.isGameOver) {
                 stateManager.interruptConnect()
-                again.isHidden = false
-                var message = "You Win ~~~"
-                if pokerManager.ourScroe < pokerManager.winNumber {
-                    message = " You Lose ..."
-                }
-                
-                UIAlertController.showAlert(title: "Game Finish", message: message)
+                finishView.isHidden = false
+                finishView.setInfo(pokerManager.ourScroe < pokerManager.winNumber)
             }
         }
     }

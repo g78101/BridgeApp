@@ -9,7 +9,19 @@
 /* Begin PBXBuildFile section */
 		3A1F5631221A501C0047900C /* PlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1F5630221A501C0047900C /* PlayView.swift */; };
 		3A207D4A202ED2FB0022D774 /* CallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A207D49202ED2FB0022D774 /* CallView.swift */; };
+		3A25EBBC23A8DA4B007DF15D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A25EBBB23A8DA4B007DF15D /* LoadingView.swift */; };
+		3A25EBBE23A8DF98007DF15D /* SelectPartnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A25EBBD23A8DF98007DF15D /* SelectPartnerView.swift */; };
+		3A26F9BF23AF486100D37F8E /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A26F9BE23AF486100D37F8E /* AlertView.swift */; };
+		3A2FB21423A26C7100A81842 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A2FB21223A26C7100A81842 /* Launch Screen.storyboard */; };
 		3A39AEEA22114D9700AE570A /* CardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A39AEE922114D9700AE570A /* CardsView.swift */; };
+		3A61417223AB99BA000BB4AC /* PlayCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61417123AB99BA000BB4AC /* PlayCardView.swift */; };
+		3A61417623ABAD7D000BB4AC /* InfoCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61417523ABAD7D000BB4AC /* InfoCallView.swift */; };
+		3A61417823ABAD8C000BB4AC /* InfoPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61417723ABAD8C000BB4AC /* InfoPlayView.swift */; };
+		3A61417A23ABB34C000BB4AC /* RecordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61417923ABB34C000BB4AC /* RecordView.swift */; };
+		3A61417C23ABCB6D000BB4AC /* NamesLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61417B23ABCB6D000BB4AC /* NamesLabel.swift */; };
+		3A61417E23ABD003000BB4AC /* InfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61417D23ABD003000BB4AC /* InfoTableViewCell.swift */; };
+		3A61418023ABD9E5000BB4AC /* FlowerCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61417F23ABD9E5000BB4AC /* FlowerCount.swift */; };
+		3A61418223ABF057000BB4AC /* FinishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61418123ABF057000BB4AC /* FinishView.swift */; };
 		3A70E95B201971F60073665C /* PokerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A70E95A201971F60073665C /* PokerManager.swift */; };
 		3A8011BB2014770900BCFD00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8011BA2014770900BCFD00 /* AppDelegate.swift */; };
 		3A8011BD2014770900BCFD00 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8011BC2014770900BCFD00 /* ViewController.swift */; };
@@ -26,7 +38,19 @@
 /* Begin PBXFileReference section */
 		3A1F5630221A501C0047900C /* PlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayView.swift; sourceTree = "<group>"; };
 		3A207D49202ED2FB0022D774 /* CallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallView.swift; sourceTree = "<group>"; };
+		3A25EBBB23A8DA4B007DF15D /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		3A25EBBD23A8DF98007DF15D /* SelectPartnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPartnerView.swift; sourceTree = "<group>"; };
+		3A26F9BE23AF486100D37F8E /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		3A2FB21323A26C7100A81842 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Launch Screen.storyboard"; sourceTree = "<group>"; };
 		3A39AEE922114D9700AE570A /* CardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsView.swift; sourceTree = "<group>"; };
+		3A61417123AB99BA000BB4AC /* PlayCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayCardView.swift; sourceTree = "<group>"; };
+		3A61417523ABAD7D000BB4AC /* InfoCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCallView.swift; sourceTree = "<group>"; };
+		3A61417723ABAD8C000BB4AC /* InfoPlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlayView.swift; sourceTree = "<group>"; };
+		3A61417923ABB34C000BB4AC /* RecordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordView.swift; sourceTree = "<group>"; };
+		3A61417B23ABCB6D000BB4AC /* NamesLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesLabel.swift; sourceTree = "<group>"; };
+		3A61417D23ABD003000BB4AC /* InfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewCell.swift; sourceTree = "<group>"; };
+		3A61417F23ABD9E5000BB4AC /* FlowerCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerCount.swift; sourceTree = "<group>"; };
+		3A61418123ABF057000BB4AC /* FinishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishView.swift; sourceTree = "<group>"; };
 		3A70E95A201971F60073665C /* PokerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokerManager.swift; sourceTree = "<group>"; };
 		3A8011B72014770900BCFD00 /* FancyBridge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FancyBridge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A8011BA2014770900BCFD00 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +87,38 @@
 			path = FancyBridge/Extension;
 			sourceTree = "<group>";
 		};
+		3A454E0C23ACBA97002F1BB8 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				3AA6C699202C579500035669 /* CardView.swift */,
+				3A39AEE922114D9700AE570A /* CardsView.swift */,
+				3A61417923ABB34C000BB4AC /* RecordView.swift */,
+				3A61417B23ABCB6D000BB4AC /* NamesLabel.swift */,
+				3A25EBBD23A8DF98007DF15D /* SelectPartnerView.swift */,
+				3A61417F23ABD9E5000BB4AC /* FlowerCount.swift */,
+				3A61418123ABF057000BB4AC /* FinishView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		3A454E0D23ACBAE5002F1BB8 /* TableViews */ = {
+			isa = PBXGroup;
+			children = (
+				3A454E0E23ACBAF8002F1BB8 /* Cell */,
+				3A61417523ABAD7D000BB4AC /* InfoCallView.swift */,
+				3A61417723ABAD8C000BB4AC /* InfoPlayView.swift */,
+			);
+			path = TableViews;
+			sourceTree = "<group>";
+		};
+		3A454E0E23ACBAF8002F1BB8 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3A61417D23ABD003000BB4AC /* InfoTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		3A8011AE2014770900BCFD00 = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +145,7 @@
 				3A8011BA2014770900BCFD00 /* AppDelegate.swift */,
 				3A8011BC2014770900BCFD00 /* ViewController.swift */,
 				3A8011BE2014770900BCFD00 /* Main.storyboard */,
+				3A2FB21223A26C7100A81842 /* Launch Screen.storyboard */,
 				3A8011C12014770900BCFD00 /* Assets.xcassets */,
 			);
 			path = FancyBridge;
@@ -98,8 +155,8 @@
 			isa = PBXGroup;
 			children = (
 				3A8011CC2014772800BCFD00 /* StreamManager.swift */,
-				3A92EA5E201832A3009C8F3D /* StateManager.swift */,
 				3A70E95A201971F60073665C /* PokerManager.swift */,
+				3A92EA5E201832A3009C8F3D /* StateManager.swift */,
 			);
 			name = Managers;
 			path = FancyBridge/Managers;
@@ -117,11 +174,14 @@
 		3AA6C698202C561600035669 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3A454E0D23ACBAE5002F1BB8 /* TableViews */,
+				3A454E0C23ACBA97002F1BB8 /* Components */,
+				3A25EBBB23A8DA4B007DF15D /* LoadingView.swift */,
 				3AD6BE7D221ABFAA00AAB3E3 /* InfoView.swift */,
-				3AA6C699202C579500035669 /* CardView.swift */,
-				3A39AEE922114D9700AE570A /* CardsView.swift */,
 				3A207D49202ED2FB0022D774 /* CallView.swift */,
 				3A1F5630221A501C0047900C /* PlayView.swift */,
+				3A61417123AB99BA000BB4AC /* PlayCardView.swift */,
+				3A26F9BE23AF486100D37F8E /* AlertView.swift */,
 			);
 			name = Views;
 			path = FancyBridge/Views;
@@ -187,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A2FB21423A26C7100A81842 /* Launch Screen.storyboard in Resources */,
 				3A8011C22014770900BCFD00 /* Assets.xcassets in Resources */,
 				3A8011C02014770900BCFD00 /* Main.storyboard in Resources */,
 			);
@@ -201,15 +262,26 @@
 			files = (
 				3A8011CD2014772800BCFD00 /* StreamManager.swift in Sources */,
 				3A92EA5F201832A3009C8F3D /* StateManager.swift in Sources */,
+				3A61417823ABAD8C000BB4AC /* InfoPlayView.swift in Sources */,
 				3AD6BE7C221AAEA700AAB3E3 /* UIButton+extension.swift in Sources */,
+				3A26F9BF23AF486100D37F8E /* AlertView.swift in Sources */,
+				3A61417623ABAD7D000BB4AC /* InfoCallView.swift in Sources */,
+				3A61418023ABD9E5000BB4AC /* FlowerCount.swift in Sources */,
 				3A207D4A202ED2FB0022D774 /* CallView.swift in Sources */,
 				3AD6BE7E221ABFAA00AAB3E3 /* InfoView.swift in Sources */,
+				3A25EBBC23A8DA4B007DF15D /* LoadingView.swift in Sources */,
 				3A8011BD2014770900BCFD00 /* ViewController.swift in Sources */,
+				3A25EBBE23A8DF98007DF15D /* SelectPartnerView.swift in Sources */,
 				3AF08D5E21C24387005487D4 /* UIAlertController.swift in Sources */,
+				3A61417A23ABB34C000BB4AC /* RecordView.swift in Sources */,
 				3A39AEEA22114D9700AE570A /* CardsView.swift in Sources */,
 				3A8011BB2014770900BCFD00 /* AppDelegate.swift in Sources */,
+				3A61418223ABF057000BB4AC /* FinishView.swift in Sources */,
 				3AA6C69A202C579500035669 /* CardView.swift in Sources */,
+				3A61417223AB99BA000BB4AC /* PlayCardView.swift in Sources */,
 				3A1F5631221A501C0047900C /* PlayView.swift in Sources */,
+				3A61417C23ABCB6D000BB4AC /* NamesLabel.swift in Sources */,
+				3A61417E23ABD003000BB4AC /* InfoTableViewCell.swift in Sources */,
 				3A70E95B201971F60073665C /* PokerManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -217,6 +289,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		3A2FB21223A26C7100A81842 /* Launch Screen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A2FB21323A26C7100A81842 /* Base */,
+			);
+			name = "Launch Screen.storyboard";
+			sourceTree = "<group>";
+		};
 		3A8011BE2014770900BCFD00 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -346,10 +426,12 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2.0.0;
 				DEVELOPMENT_TEAM = 77HT6AC98W;
 				INFOPLIST_FILE = "FancyBridge/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Talka.FancyBridge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -365,10 +447,12 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2.0.0;
 				DEVELOPMENT_TEAM = 77HT6AC98W;
 				INFOPLIST_FILE = "FancyBridge/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Talka.FancyBridge;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -13,43 +13,43 @@
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "iPhoneSettings2@.png",
+      "filename" : "fancybridgeSettings2@.png",
       "scale" : "2x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "iPhoneSettings3@.png",
+      "filename" : "fancybridgeSettings3@.png",
       "scale" : "3x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "iPhoneSpotlight2@.png",
+      "filename" : "fancybridgeSpotlight2@.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "iPhoneSpotlight3@.png",
+      "filename" : "fancybridgeSpotlight3@.png",
       "scale" : "3x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "iPhoneApp2@.png",
+      "filename" : "fancybridge2@.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "iPhoneApp3@.png",
+      "filename" : "fancybridge3@.png",
       "scale" : "3x"
     },
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "AppIcon-512pt2x.png",
+      "filename" : "fancybridge512pt2x.png",
       "scale" : "1x"
     }
   ],

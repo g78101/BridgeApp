@@ -18,15 +18,20 @@ class PokerManager: NSObject {
     
     static var instatnce:PokerManager!
     //MARK: - Const
-    static let flowers = [" SA"," MD"," C"," D"," H"," S"," NT"]
+    static var Flowers = ["card-diamand","card-clubs","card-heart","card-spade"]
+    static var Numbers = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
+    static var Colors = [UIColor(red: 243.0/255, green: 77.0/255, blue: 70.0/255, alpha: 1.0),UIColor(white: 51.0/255, alpha: 1.0)]
+    
     static let totalSum = 14
     //MARK: - Member
     weak var delegate:PokerManagerDelegate!
     var streamManager:StreamManager!
     var stateManager:StateManager!
-    var cards:[String] = [String]()
-    var callsRecord:[String] = ["","","",""]
-    var playsRecord:[String] = ["","","",""]
+    var cards:[String] = ["0","0","0","0","0","0","0","0","0","0","0","0","0"]
+    var otherCards:[String] = ["0","0","0","0","0","0","0","0","0","0","0","0","0"]
+    var callsRecord:[[Int]] = [[Int](),[Int](),[Int](),[Int]()]
+    var playsRecord:[[Int]] = [[Int](),[Int](),[Int](),[Int]()]
+    var boutsWinRecord:[Int] = Array<Int>()
     var flowerCountRecord:[Int] = [0,0,0,0]
     var turnIndex:Int = -1
     var trump:Int = -1
@@ -34,6 +39,8 @@ class PokerManager: NSObject {
     var winNumber:Int = -1
     var ourScroe:Int = 0
     var enemyScroe:Int = 0
+    var threeMode = false
+    var comIndex = -1
     
     //MARK: - Init
     static func getInstance() -> PokerManager {
@@ -53,15 +60,20 @@ class PokerManager: NSObject {
     //MARK: - Function
     func reset() {
         cards.removeAll()
-        callsRecord = ["","","",""]
-        playsRecord = ["","","",""]
+        otherCards.removeAll()
+        callsRecord = [[Int](),[Int](),[Int](),[Int]()]
+        playsRecord = [[Int](),[Int](),[Int](),[Int]()]
+        boutsWinRecord.removeAll()
         flowerCountRecord = [0,0,0,0]
+        
         turnIndex = -1
         trump = -1
         currentFlower = -1
         winNumber = -1
         ourScroe = 0
         enemyScroe = 0
+        threeMode = false
+        comIndex = -1
     }
     
     func setCards(_ cardArray:[String]) {
@@ -71,12 +83,55 @@ class PokerManager: NSObject {
         }
     }
     
+    func setOtherCards(_ cardArray:[String]) {
+        otherCards = cardArray
+        if (self.delegate != nil) {
+            self.delegate.setCardsForUI(cards)
+        }
+    }
+    
     func callTrump(_ index:Int) {
         streamManager.sendMessage(String(format:"C%d,%d",stateManager.playInfo.turnIndex,index))
     }
     
-    func playPoker(_ index:Int) {
-        streamManager.sendMessage(String(format:"P%d,%d",stateManager.playInfo.turnIndex,Int(cards[index])!))
-        cards[index] = "0"
+    func playPoker(_ poker:Int) {
+        streamManager.sendMessage(String(format:"P%d,%d",turnIndex,poker))
+    }
+    
+    func twoCardsPlay() -> Bool {
+        let myTurnIndex = stateManager.playInfo.turnIndex
+        return (myTurnIndex+2)%4 == comIndex
+    }
+    
+    func canPlayCard() -> Bool {
+        let myTurnIndex = stateManager.playInfo.turnIndex
+        return myTurnIndex == turnIndex
+    }
+    
+    func canPlayOtherCard() -> Bool {
+        let otherTurnIndex = (stateManager.playInfo.turnIndex+2)%4
+        return otherTurnIndex == turnIndex
+    }
+    
+    func findMaxCallCount() -> Int {
+        var max = 0
+        for i in 0..<4 {
+            let count = callsRecord[i].count
+            if count > max {
+                max = count
+            }
+        }
+        return max
+    }
+    
+    func findMaxPlayCount() -> Int {
+        var max = 0
+        for i in 0..<4 {
+            let count = playsRecord[i].count
+            if count > max {
+                max = count
+            }
+        }
+        return max
     }
 }

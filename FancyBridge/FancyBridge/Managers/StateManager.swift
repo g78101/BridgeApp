@@ -17,6 +17,8 @@ enum GameState:Int {
 enum ConnectState:String {
     case GameState = "S"
     case Message = "M"
+    case Wait = "W"
+    case ThreeMode = "T"
     case Names = "N"
     case Hand = "H"
     case Call = "C"
@@ -35,12 +37,13 @@ struct PlayerInfo {
 }
 
 protocol StateManagerDelegate:class {
-    func updateWaitingUI(_ text:String)
+    func updateWaitingUI(_ normalCount:Int, _ threeModeCount:Int)
     func changeStateUI(_ state:GameState)
 }
 
 protocol StateManagerCallDelegate:class {
     func updateCallingUI(_ index:Int)
+    func showThreeModeUI(_ index:Int)
 }
 
 protocol StateManagerPlayDelegate:class {
@@ -57,6 +60,7 @@ class StateManager: NSObject, StreamManagerDelegate {
     var streamManager:StreamManager!
     var playInfo:PlayerInfo = PlayerInfo(name: "", turnIndex: -1)
     var players:[String] = [String]()
+    var threeModePlayers:[String] = [String]()
     var gameState:GameState = .Wait
     var isGameOver:Bool = false
     
@@ -87,6 +91,14 @@ class StateManager: NSObject, StreamManagerDelegate {
     
     func connectServer() {
         streamManager.connect()
+    }
+    
+    func joinThreeMode() {
+        streamManager.sendMessage("W")
+    }
+    
+    func choosedPartner(_ choosedIndex:Int) {
+        streamManager.sendMessage(String(format:"T%d",choosedIndex))
     }
     
     func interruptConnect() {
@@ -124,12 +136,20 @@ class StateManager: NSObject, StreamManagerDelegate {
                 streamManager.sendMessage("N"+playInfo.name)
                 break
             case .Call:
-                pokerManager.turnIndex = Int(splitArray.last!)!
+                let threeModeInt = Int(splitArray[2])!
+                pokerManager.turnIndex = Int(splitArray[1])!
+                pokerManager.threeMode = (threeModeInt==1 ? true : false)
+                
                 break
             case .Play:
-                let lastUser = Int(splitArray.last!)!
+                var lastUser = Int(splitArray.last!)!
                 pokerManager.trump = Int(splitArray[1])!
                 pokerManager.turnIndex = Int(splitArray[2])!
+                pokerManager.callsRecord[lastUser].append(-1)
+                
+                if pokerManager.threeMode {
+                    lastUser = 1
+                }
                 
                 if (lastUser==playInfo.turnIndex||lastUser==(playInfo.turnIndex+2)%4) {
                     pokerManager.winNumber = PokerManager.totalSum-(pokerManager.trump/7+7)
@@ -147,36 +167,62 @@ class StateManager: NSObject, StreamManagerDelegate {
             
             break
         case .Message:
+//            if (self.delegate != nil) {
+//                self.delegate.updateWaitingUI(info)
+//            }
+            break
+        case .Wait:
+            let splitArray = info.components(separatedBy: ",")
+            let normalCount = Int(splitArray.first!)!
+            let threeModeCount = Int(splitArray.last!)!
+            
             if (self.delegate != nil) {
-                self.delegate.updateWaitingUI(info)
+                self.delegate.updateWaitingUI(normalCount,threeModeCount)
+            }
+            break
+        case .ThreeMode:
+            let calledIndex = Int(info)!
+            if (self.delegate != nil) {
+                self.callDelegate.showThreeModeUI(calledIndex)
             }
             break
         case .Names:
-            players = info.components(separatedBy: ",")
+            if !pokerManager.threeMode {
+                players = info.components(separatedBy: ",")
+            }
+            else {
+                threeModePlayers = info.components(separatedBy: ",")
+
+                for i in 0..<4 {
+                    if threeModePlayers[i] == playInfo.name {
+                        playInfo.turnIndex = i
+                        AlertView.showViewSetText(String(format:"You are player %d",i+1))
+                        break
+                    }
+                }
+                pokerManager.comIndex = threeModePlayers.index(of: "-")!
+            }
             break
         case .Hand:
-            pokerManager.setCards(info.components(separatedBy: ","))
+            if !pokerManager.threeMode {
+                pokerManager.setCards(info.components(separatedBy: ","))
+            }
+            else {
+                pokerManager.setOtherCards(info.components(separatedBy: ","))
+            }
             break
         case .Call:
             let splitArray = info.components(separatedBy: ",")
             let nowTurn = Int(splitArray[1])!
             let trump = Int(splitArray.last!)!
             let lastTurn = Int(splitArray.first!)!
-            var tempStr:String!
             
             pokerManager.turnIndex = nowTurn
             if playInfo.turnIndex == nowTurn {
-                UIAlertController.showAlert(title: "", message: "Your Turn")
+                AlertView.showViewSetText("Your Turn")
             }
             
-            let updateRecord:String = pokerManager.callsRecord[lastTurn]
-            if trump != -1 {
-                tempStr = String(format:"%d %@\n",(trump/7)+1,PokerManager.flowers[trump%7])
-            }
-            else {
-                tempStr = "Pass\n"
-            }
-            pokerManager.callsRecord[lastTurn] = updateRecord + tempStr
+            pokerManager.callsRecord[lastTurn].append(trump)
             
             if (splitArray.last != nil) {
                 if (self.callDelegate != nil) {
@@ -189,7 +235,6 @@ class StateManager: NSObject, StreamManagerDelegate {
             let nextTurn = Int(splitArray.last!)!
             let lastTurn = (nextTurn+4-1)%4;
             let poker = Int(splitArray.first!)!
-            var tempStr:String!
             let playState = PlayState(rawValue: Int(splitArray[1])!)!
             
             pokerManager.turnIndex = nextTurn
@@ -201,23 +246,21 @@ class StateManager: NSObject, StreamManagerDelegate {
                         pokerManager.currentFlower=(poker-1)/13;
                     }
                     
-                    let updateRecord:String = pokerManager.playsRecord[lastTurn]
                     let flower = Int((poker-1)/13)
-                    tempStr = String(format:"%@",CardView.showPokerStr(poker: poker))
-                    
-                    pokerManager.playsRecord[lastTurn] = updateRecord + tempStr
+                    pokerManager.playsRecord[lastTurn].append(poker)
                     pokerManager.flowerCountRecord[flower] += 1;
+                }
+                else {
+                    pokerManager.boutsWinRecord.append(nextTurn)
                 }
                 break
             case .LastCard:
-                let updateRecord:String = pokerManager.playsRecord[lastTurn]
+               
                 let flower = Int((poker-1)/13)
-                tempStr = String(format:"%@",CardView.showPokerStr(poker: poker))
-                
-                pokerManager.playsRecord[lastTurn] = updateRecord + tempStr
+                pokerManager.playsRecord[lastTurn].append(poker)
                 pokerManager.flowerCountRecord[flower] += 1;
                 
-                if playInfo.turnIndex == 3 {
+                if playInfo.turnIndex == 0 {
                     DispatchQueue.global().async {
                         sleep(2)
                         self.streamManager.sendMessage("P-1,0")
@@ -229,6 +272,7 @@ class StateManager: NSObject, StreamManagerDelegate {
                 
                 break
             case .GameOver:
+                pokerManager.boutsWinRecord.append(nextTurn)
                 isGameOver = true
                 break
             }
