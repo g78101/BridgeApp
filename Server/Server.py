@@ -4,6 +4,7 @@ import socket, select
 import random
 import Room
 import Observer
+import IpCheck
 
 def sendDataToRoom (room,message):
     for socket in room.sockets:
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     CONNECTION_LIST = []
     Rooms = []
     RECV_BUFFER = 1024 # Advisable to keep it as an exponent of 2
-    PORT = 9999
+    PORT = 8888 
      
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # this has no effect, why ?
@@ -53,7 +54,9 @@ if __name__ == "__main__":
 
     observer = Observer.HttpServer()
     observer.start()
- 	
+
+    ipCheck = IpCheck.Manager()
+
     try:
       while 1:
         # Get the list sockets which are ready to be read through select
@@ -64,14 +67,19 @@ if __name__ == "__main__":
             if sock == server_socket:
                 # Handle the case in which there is a new connection recieved through server_socket
                 sockfd, addr = server_socket.accept()
+                
+                if False:
+                    sockfd.close()
+                else:
+                  print addr
+                  CONNECTION_LIST.append(sockfd)
+		  #print(addr[0])
+		  #print(type(addr[0]))
+                  if len(Rooms) == 0:
+                      observer.reset()
+                      Rooms.append(Room.PokerRoom())
 
-                CONNECTION_LIST.append(sockfd)
-
-                if len(Rooms) == 0:
-                    observer.reset()
-                    Rooms.append(Room.PokerRoom())
-
-                for room in Rooms:
+                  for room in Rooms:
 
                     if not room.addSocket(sockfd):
                         # current only one room 
@@ -97,7 +105,7 @@ if __name__ == "__main__":
                     # a "Connection reset by peer" exception will be thrown
                     data = sock.recv(RECV_BUFFER)
                     room = Rooms[findSocketInRoomIndex(sock)]
-
+#                    print(data)
                     if data:
                         connectState = data[0:1]
                         info = data[1:]
@@ -105,13 +113,9 @@ if __name__ == "__main__":
                         if connectState == "N":
                             room.setNameWithSocket(sock,info)
                             if len(room.sockets) < 4:
-                                sendDataToRoom(room,sendData("M%s enter room (%d/4)"%(info,len(room.sockets))))
+                                sendDataToRoom(room,sendData("W%d,%d"%(len(room.sockets),room.threeModeCount)))
                             elif room.isAllRead():
-                                users=""
-                                for user in room.users:
-                                    users+=user
-                                    if user != room.users[-1]:
-                                        users+=","
+                                users = room.getNameStr(room.users)
                                 sendDataToRoom(room,sendData("N%s"%users))
                                 observer.setPlayers(users)
                                 room.dealingCards()
@@ -119,12 +123,40 @@ if __name__ == "__main__":
                                     playCard = room.getPlayerCards(i)
                                     room.sockets[i].send(sendData("H%s"%playCard))
                                     observer.setPlayersPoker(i,playCard)
-                                sendDataToRoom(room,sendData("S%d,%d"%(room.state.value,random.randint(0,3))))
+                                sendDataToRoom(room,sendData("S%d,%d,0"%(room.state.value,random.randint(0,3))))
+                        elif connectState == "W":
+                            room.threeModeCount+=1
+                            if room.threeModeCount < 3:
+                                sendDataToRoom(room,sendData("W%d,%d"%(len(room.sockets),room.threeModeCount)))
+                            elif room.threeModeCount==3:
+                                room.MaxCount = 3
+                                room.setState(1)
+                                room.users[3]="-"
+                                users = room.getNameStr(room.users)
+                                sendDataToRoom(room,sendData("N%s"%users))
+                                observer.setPlayers(users)
+                                room.dealingCards()
+                                for i in range(0,4):
+                                    playCard = room.getPlayerCards(i)
+                                    observer.setPlayersPoker(i,playCard)
+                                    if i < 3:
+                                        room.sockets[i].send(sendData("H%s"%playCard))
+                                sendDataToRoom(room,sendData("S%d,%d,1"%(room.state.value,random.randint(0,2))))
                         elif connectState == "C":
                             sendStr=room.callingInfo(info)
                             sendDataToRoom(room,sendData(sendStr))
                             observer.updateContent(sendStr)
-
+                        elif connectState == "T":
+                            room.setNewNames(int(info))
+                            users = room.getNameStr(room.threeModeUsers)
+                            sendDataToRoom(room,sendData("N%s"%users))
+                            observer.setThreeModePlayers(users)
+                            playCard = room.getPlayerCards(3)
+                            sendDataToRoom(room,sendData("H%s"%playCard))
+                            observer.setThreeModeIndex(room.threeModeIndex)
+                            sendStr = "S2,%d,%d,%d"%(room.bridge.trump,(room.threeModeIndex.index(room.callFirst)+1)%4,((room.threeModeIndex[0]+(room.MaxCount-1))%room.MaxCount))
+                            sendDataToRoom(room,sendData(sendStr))
+                            observer.updateContent(sendStr)
                         elif connectState == "P":
                             sendStr=room.playingInfo(info)
                             sendDataToRoom(room,sendData(sendStr))

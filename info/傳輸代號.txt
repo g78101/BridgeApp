@@ -4,19 +4,27 @@
 
 S : 狀態 (wait-0、call-1、play-2)
 ->	server S0,index
-	server S1,(先喊)
-	server S2,(王牌),(先出),(最後一個pass)
+->	server S1,(先喊),(threeMode)
+->	server S2,(王牌),(先出),(最後一個pass)
 
 M : 聊天訊息 (暫不使用
 ->	client M大家好
-	server M${name}:大家好
+->	server M${name}:大家好
+
+W : 等待模式
+->  client W
+->	server W{NormalCount},{threeCount}
+
+T : 三人模式
+->  client T{ChoosedUser}
+->  server T{CallWinUser}
 
 N : name
 ->	client N橋牌王子
-	server N123,456,789,ABC
+->	server N123,456,789,ABC
 
 H : 手牌
--> server H1,2,3,4,5,6,7,8,9,10 (','隔開)
+->  server H1,2,3,4,5,6,7,8,9,10 (','隔開)
 
 C : 喊牌
 ->	client C{index},(0 ~ 46)

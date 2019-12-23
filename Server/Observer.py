@@ -24,8 +24,10 @@ class S(BaseHTTPRequestHandler):
 
     players = [""] * 4
     callsRecord = [""] * 4
+    threeModeUsers = [""] * 4
     playsRecord = [""] * 4
     playsPokerHand = [[] for i in range(4)]
+    threeModeIndex = [-1] * 4
 
     trump = 'Waiting'
     attackIndex = [-1] * 2
@@ -34,6 +36,7 @@ class S(BaseHTTPRequestHandler):
     attackScore = 0
     defenseTeam = ''
     defenseScore = 0
+    threeMode = False
 
     def log_request(self, code): pass
 
@@ -66,6 +69,11 @@ class S(BaseHTTPRequestHandler):
             for temp in subCall:
                 self.wfile.write(temp + '<br>')
             self.wfile.write('</div>')
+        # threeMode
+        if self.threeMode:
+            for name in self.threeModeUsers:
+                self.wfile.write(self.nameHtml)
+                self.wfile.write(name+'</div>')
         # play
         for play in self.playsRecord:
             self.wfile.write(self.playHtml)
@@ -114,8 +122,10 @@ class HttpServer:
     def reset(self):
         S.players = [""] * 4
         S.callsRecord = [""] * 4
+        S.threeModeUsers = [""] * 4
         S.playsRecord = [""] * 4
         S.playsPokerHand = [[] for i in range(4)]
+        S.threeModeIndex = [-1] * 4
 
         S.trump = 'Waiting'
         S.attackIndex = [-1] * 2
@@ -124,9 +134,16 @@ class HttpServer:
         S.attackScore = 0
         S.defenseTeam = ''
         S.defenseScore = 0
+        S.threeMode = False
 
-    def setPlayers(self,list):
-        S.players = list.split(',')
+    def setPlayers(self,str):
+        S.players = str.split(',')
+
+    def setThreeModePlayers(self,str):
+        S.threeModeUsers = str.split(',')
+
+    def setThreeModeIndex(self,list):
+        S.threeModeIndex = list
 
     def setPlayersPoker(self,index,cards):
         cardArray = cards.split(',')
@@ -143,16 +160,22 @@ class HttpServer:
             lastUser = int(splitArray[3])
 
             S.trump = ("%d%s")%(trump/7+1,Trumps[trump%7])
-
-            S.attackIndex[0] = (lastUser+1)%4
-            S.attackIndex[1] = (lastUser+3)%4
             S.attackWinNumber = (trump/7+7)
+
+            if S.threeMode:
+                S.attackIndex[0] = 0
+                S.attackIndex[1] = 2
+            else:
+                S.attackIndex[0] = (lastUser+1)%4
+                S.attackIndex[1] = (lastUser+3)%4
 
             attackTeam = ''
             defenseTeam = ''
 
             for i in range(0,4):
                 player = S.players[i]
+                if S.threeMode:
+                    player = S.threeModeUsers[i]
                 if i in S.attackIndex:
                     attackTeam = attackTeam + player + ' , '
                 else:
@@ -160,6 +183,8 @@ class HttpServer:
             S.attackTeam = attackTeam[0:len(attackTeam)-3]
             S.defenseTeam = defenseTeam[0:len(defenseTeam)-3]
 
+        elif connectState == "T":
+            S.threeMode = True
         elif connectState == "C":
             splitArray = info.split(',')
             lastUser = int(splitArray[0])
@@ -179,10 +204,13 @@ class HttpServer:
             playState = Type.PlayState(int(splitArray[1]))
 
             if poker != 0:
+                removeIndex = lastUser
                 updateRecord = S.playsRecord[lastUser]
                 tempStr = showPokerStr(poker)
                 S.playsRecord[lastUser] = updateRecord + tempStr
-                S.playsPokerHand[lastUser].remove(poker)
+                if S.threeMode:
+                    removeIndex = S.threeModeIndex[lastUser]
+                S.playsPokerHand[removeIndex].remove(poker)
             else:
                 if nextUser in S.attackIndex:
                     S.attackScore += 1
