@@ -68,9 +68,7 @@ if __name__ == "__main__":
                 # Handle the case in which there is a new connection recieved through server_socket
                 sockfd, addr = server_socket.accept()
                 
-                if False:
-                    sockfd.close()
-                else:
+                if ipCheck.canConnection(addr[0]) or addr[0] == "127.0.0.1":
                   print addr
                   CONNECTION_LIST.append(sockfd)
 		  #print(addr[0])
@@ -97,6 +95,8 @@ if __name__ == "__main__":
                             removeRoomSockets(room)
                         
                         # sockfd.send("S01,02,03,04,05,06,07,08,09,10,11,12,13")
+                else:
+                    sockfd.close()
             #Some incoming message from a client
             else:
                 # Data recieved from client, process it
