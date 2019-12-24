@@ -69,6 +69,7 @@ class FinishView: UIView {
     @objc func touchUpInside(_ sender:UIButton) {
         self.isHidden = true
         imageView.layer.removeAllAnimations()
+        imageView.layer.transform = CATransform3DIdentity
         PokerManager.getInstance().reset()
         StateManager.getInstance().reset()
         StateManager.getInstance().connectServer()
