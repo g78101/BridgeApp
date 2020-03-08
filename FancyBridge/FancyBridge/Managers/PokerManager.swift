@@ -85,9 +85,6 @@ class PokerManager: NSObject {
     
     func setOtherCards(_ cardArray:[String]) {
         otherCards = cardArray
-        if (self.delegate != nil) {
-            self.delegate.setCardsForUI(cards)
-        }
     }
     
     func callTrump(_ index:Int) {
