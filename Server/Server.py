@@ -34,7 +34,7 @@ def sendData(str):
     return str+"\n"
 
 if __name__ == "__main__":
-     
+    
     # List to keep track of socket descriptors
     CONNECTION_LIST = []
     Rooms = []
@@ -52,7 +52,8 @@ if __name__ == "__main__":
  
     print "Socket server started on port " + str(PORT)
 
-    observer = Observer.HttpServer()
+    #observer = Observer.HttpServer()
+    observer = Observer.WebSocket()
     observer.start()
 
     ipCheck = IpCheck.Manager()

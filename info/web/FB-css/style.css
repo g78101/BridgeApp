@@ -1,0 +1,307 @@
+body{
+	color: #333333!important;
+	font-size: 15px;
+	font-family: arial;
+	background: #ffffff;
+	overflow-x: hidden;
+}
+.empty-img{
+ width: 140px;
+ height: 140px;
+ text-align: center;
+ margin: 10% auto 0;
+ display: block;
+}
+.empty-text{
+ margin: 30px auto 0;
+ font-size: 24px;
+ text-align: center;
+}
+.banner{
+	padding: 0px;
+	max-width: 100%;
+	margin: auto;
+	display: block;	
+}
+.animation-hover{
+	width: 100%;
+	height: 250px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-image: url(../FB-image/banner.png);
+	background-size: cover;
+	position: relative;
+	overflow: hidden;
+}
+.ying{
+	width: 240px;
+	height: auto;
+	position: absolute;
+	left: -220px;
+	top: 170px;
+    animation-name:yingmove;
+    animation-duration:1s;	
+    animation-direction:normal;
+    animation-fill-mode:forwards;
+	animation-delay:2s;
+}
+@keyframes yingmove{
+	from{
+		left: -220px;
+		top:170px;
+	}
+	to{
+		left: -30px;
+		top: 50px;
+	}
+}
+.content{
+	padding:30px 35px;
+}
+.table-style{
+	width: 100%;
+	border:1px solid #cccccc;
+}
+.table-head{
+	height: 32px;
+	width: 100%;
+	color: #ffffff;
+	line-height: 28px;
+}
+.table-head.head-team{
+	background-color:#FF7066;
+	border-color: #FF7066;
+	border: 1px solid #FF7066;
+	border-bottom: none;
+}
+.head-play{
+	background-color:#00A69B;
+	border-color: #00A69B;
+	border: 1px solid #00A69B;	
+	border-bottom: none;
+}
+.head-three-mode{
+	background: #9A9A9A;
+	border-color: #9A9A9A;
+	border: 1px solid #9A9A9A;	
+	border-bottom: none;	
+}
+.head-three-mode td{
+	text-align: center;
+}
+.head-play td{
+	text-align: center;
+}
+td{
+	padding-left: 10px;
+}
+.crown{
+	color: #FFE500;
+	font-size: 22px;
+	margin-right: 8px;
+}
+.table-body{
+	height: 32px;
+	width: 100%;
+	line-height: 32px;
+}
+.table-bottom{
+	border-bottom: 1px solid #cccccc;	
+}
+.table-right{
+	border-right: 1px solid #cccccc;		
+}
+.table-right.table-center{
+	padding-right: 30px;
+}
+.king-number{
+	font-size: 38px;
+	font-weight:500;
+	display: inline-block;
+	line-height: 50px;
+}
+.king-card-size{
+	width: 38px;
+	height: 38px;
+	position: relative;
+	margin: -15px -20px 0 0;
+}
+.table-center{
+	text-align: center;
+}
+.title{
+	margin: 20px auto 5px;
+	font-size: 16px;
+}
+.table-play td{
+	font-size: 18px;
+	text-align: center;
+	border-right: 1px solid #cccccc;
+}
+.list-img{
+	width: 18px;
+	height:18px;
+	margin-top: -3px;
+}
+.bg-color-tr tr:nth-child(even) {
+	background: #F5F5F5;
+}
+.td-focus{
+	background: #B0EEFF;
+}
+.total-tr td{
+	border-top: 1px solid #cccccc;
+	height: 40px;
+}
+.total-tr div{
+	display: inline-block;
+	line-height: 40px;
+	margin-right: 5px;
+}
+.total-div{
+	height: 40px;
+	width: 100px;
+}
+.total-img{
+	width: 24px;
+	height: 24px;
+}
+.pull-left{
+	float: left;
+}
+.card{
+	width: 46px;
+	height: 66px;
+	background: #fff;
+	border:1px solid #ccc;
+	border-radius: 4px;
+	position: relative;
+	float: left;
+	margin:0 3px 3px 0;
+}
+.card-number{
+	font-size: 30px;
+	font-weight: 500;
+	margin-top: -2px;
+}
+.card-img{
+	width: 26px;
+	height: 26px;
+	margin: -10px auto;
+}
+/*.people-card{
+	min-height: 250px;
+}*/
+.people-card p{
+	margin: 10px auto 5px;
+}
+.col-md-6,.col-md-12{
+	padding: 0;
+}
+@media screen and (max-width:414px){	
+	.ying{
+		transform: rotate(-45deg);
+		width: 150px;
+	}
+	@keyframes yingmove{
+		from{
+			left: -15px;
+			top:220px;
+		}
+		to{
+			left: -15px;
+			top: 140px;
+		}
+	}
+	.empty-img{
+  		width: 100px;
+  		height: 100px;
+ 	}
+}
+@media screen and (min-width:415px) and (max-width:530px){	
+	.animation-hover{
+		height: 200px;
+	}	
+	.ying{
+		width: 170px;
+	}	
+	@keyframes yingmove{
+		from{
+			left: -200px;
+			top:150px;
+		}
+		to{
+			left: -20px;
+			top: 60px;
+		}
+	}	
+}
+@media screen and (min-width:531px) and (max-width:767px){
+	.total-card{
+	display: block!important;
+	}
+	.people-card-div div:last-child{
+	padding-bottom: 30px;
+	}
+	body{
+		overflow-x: hidden;
+		padding: 0;
+	}
+	.animation-hover{
+		background-size: cover;
+		height: 220px;
+	}	
+	.ying{
+		width: 190px;
+	}
+	@keyframes yingmove{
+		from{
+			left: -200px;
+			top:150px;
+		}
+		to{
+			left: -20px;
+			top: 60px;
+		}
+	}	
+}
+@media screen and (max-width:767px){
+	.people-card{
+		min-height: 130px;
+	}
+}
+@media screen and (min-width:768px){
+	.col-md-6,.col-md-12{
+		padding-right: 15px;
+	}
+}
+@media screen and (min-width:768px) and (max-width:996px){
+	.animation-hover{
+		height: 260px;
+	}		
+}
+@media screen and (min-width:768px) and (max-width:1388px){
+	.people-card{
+		min-height: 250px;
+	}
+}
+@media screen and (min-width:1389px){
+	.people-card{
+		min-height: 130px;
+	}	
+}
+@media screen and (min-width:997px) and (max-width:1880px){
+	.animation-hover{
+		height: 300px;
+	}		
+	@keyframes yingmove{
+		from{
+			left: -220px;
+			top:150px;
+		}
+		to{
+			left: -30px;
+			top: 90px;
+		}
+	}		
+}

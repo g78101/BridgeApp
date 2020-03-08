@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>BridgeApp</title>
+  <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="FB-css/style.css">
+</head>
+<body>
+<div>
+ 
+  <div class="col-md-12 animation-hover">
+    <img src="FB-image/ying.png" class="ying">
+  </div>  
+  <div id="Empty">
+    <img src="FB-image/empty.png" class="empty-img">
+    <p class="empty-text">比賽尚未開始</p>
+  </div>
+  <div id="Main" class="content">
+    <table class="table-style">
+      <thead>
+        <tr class="table-head head-team">
+          <td width="30%"><span class="crown">♛</span><span>王牌</span></td>
+          <td width="45%">分隊</td>
+          <td width="25%">積分</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-body">
+          <td rowspan="2" class="table-right table-center">
+            <div id="trump">
+              
+            </div>
+          </td>
+          <td id="ATeam" class="table-bottom table-right"><span></span></td>
+          <td id="AScore" class="table-bottom"><span></span></td>
+        </tr>
+        <tr class="table-body">
+          <td id="BTeam" class="table-right"></td>
+          <td id="BScore" ><span></span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="title">喊牌/出牌:</p>  
+    <table class="table-style">
+      <thead>
+        <tr class="table-head head-play">
+          <td width="25%"></td>
+          <td width="25%"></td>
+          <td width="25%"></td>
+          <td width="25%"></td>
+        </tr>
+      </thead>
+      <tbody class="bg-color-tr">                          
+      </tbody>
+    </table> 
+<!-- ///////////////////////////////// -->
+    <table class="table-style">
+      <thead>
+        <tr class="table-head head-three-mode">
+          <td width="25%"></td>
+          <td width="25%"></td>
+          <td width="25%"></td>
+          <td width="25%"></td>
+        </tr>
+      </thead>
+      <tbody class="bg-color-tr">
+      </tbody>
+    </table>
+    <p class="title">各家手牌:</p> 
+    <div class="col-md-12 people-card-div">
+      <div class="col-md-6 pull-left people-card"></div>
+      <div class="col-md-6 pull-left people-card"></div>
+      <div class="col-md-6 pull-left people-card"></div>
+      <div class="col-md-6 pull-left people-card"></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  if ("WebSocket" in window){
+    console.log("您的瀏覽器支援 WebSocket!");
+    var ws = new WebSocket("ws://talkaying.ga:3344");
+      ws.onopen = function(){
+      console.log("websocket 已連線上");
+    }
+
+    ws.onmessage = function (evt) {
+      var dataReceive = evt.data;
+      //console.log("資料已接收..."+dataReceive);
+      var datas = dataReceive.split('^');
+      var trump = datas[0];
+      var info = datas[1].split('|');
+      var ATeam = info[0];
+      var AScore = info[1];
+      var BTeam = info[2];
+      var BScore = info[3];
+      var names = datas[2].split('|');
+      var calls = datas[3].split('|');
+      var three = datas[4].split('|');
+      var showThree = (three[0]!="");
+      var plays = datas[5].split('|');
+      var winBount = datas[6].split('|');
+      var flowers = datas[7].split('|');
+      var cards = datas[8].split('|');
+      var showCard = (cards[0]!="");
+
+      var trumpHtml=""
+      var showMain=(names[0]!="")
+      if( showMain ) { 
+        trumpHtml = callPoker(true,trump)
+      }
+      
+      document.getElementById('Empty').hidden=showMain
+      document.getElementById('Main').hidden=!showMain
+
+      document.getElementById("trump").innerHTML=trumpHtml;
+      document.getElementById("ATeam").textContent=ATeam;
+      document.getElementById("AScore").textContent=AScore;
+      document.getElementById("BTeam").textContent=BTeam;
+      document.getElementById("BScore").textContent=BScore;
+      for (var i=0; i < 4 ; ++i) {
+        document.getElementsByTagName('thead')[1].getElementsByTagName('td')[i].textContent=names[i];
+      }
+
+      var callTable = document.getElementsByTagName('tbody')[1];
+      var callLength = calls.length;
+      var content = ""
+      for (var rount=0; rount < callLength; rount++) {
+        var callValues = calls[rount].split(',');
+        content = content+'<tr class="table-body table-play">'
+        
+        for (var i=0; i < 4 ; ++i) {
+	  content = content+'<td>'
+          var poker = ""
+          if(callValues[i]) {
+            poker = callPoker(false,callValues[i])
+          }
+        content = content+ poker
+        content = content+'</td>'
+        }
+        content = content+'</tr>'
+      }
+
+      callTable.innerHTML = content
+
+      for (var i=0; i < 4 ; ++i) {
+        var playName = names[i];
+        if(showThree) {
+          playName = three[i];
+        }
+        document.getElementsByTagName('thead')[2].getElementsByTagName('td')[i].textContent=playName;
+      }
+
+      var playTable = document.getElementsByTagName('tbody')[2];
+      var playLength = plays.length;
+      var content = ""
+      for (var rount=0; rount < playLength; rount++) {
+        var playValues = plays[rount].split(',');
+        content = content+'<tr class="table-body table-play">'
+        var winIndex = -1
+        if(rount<winBount.length && winBount[rount] != "") {
+          winIndex = parseInt(winBount[rount])
+        }
+        for (var i=0; i < 4 ; ++i) {
+	  winClass = ""
+          if(winIndex == i) {
+            winClass = ' class="td-focus"'
+          }
+
+          content = content+'<td'+winClass+'>'
+          var poker = ""
+          if(playValues[i]) {
+            poker = playPoker(true,playValues[i])
+          }
+          content = content+ poker
+          content = content+'</td>'
+        }
+        content = content+'</tr>'
+      }
+      
+      content = content +'<tr class="total-tr">\n<td colspan="4">\n<div>各花色總數:</div>\n<div class="total-card">\n<div class="total-div">\n<img src="FB-image/card-diamand.png" class="total-img">\n<span>X '+flowers[0]+'</span>\n</div>\n<div class="total-div">\n<img src="FB-image/card-clubs.png" class="total-img">\n<span>X '+flowers[1]+'</span>\n</div>\n<div class="total-div">\n<img src="FB-image/card-heart.png" class="total-img">\n<span>X '+flowers[2]+'</span>\n</div>\n<div class="total-div">\n<img src="FB-image/card-spade.png" class="total-img">\n<span>X '+flowers[3]+'</span>\n</div>\n</div>\n</td>\n</tr>'
+
+      playTable.innerHTML = content
+      if(showCard) {
+        for(var i=0; i < 4 ; ++i) {
+          handCard = document.getElementsByClassName('col-md-6 pull-left people-card')[i]
+          handCard.hidden=!showCard;
+	
+          var content = '<p>'+names[i]+'</p>'
+	  var cardValue = cards[i].split(',');
+	  if(cardValue[0]) {
+            for(var j=0; j< cardValue.length; ++j) {
+              content = content + '<div class="card">' + playPoker(false,cardValue[j]) + '</div>'
+            }
+	  }
+          handCard.innerHTML = content
+        }
+      }
+    };
+
+    ws.onclose = function() {
+      console.log("連線已關閉...");
+    };
+
+  }else{
+    // 瀏覽器不支援 WebSocket
+    console.log("您的瀏覽器不支援 WebSocket!");
+  }
+function callPoker(isTrump,number) {
+  
+  if(number == -1) {
+    if(isTrump) {
+	return ""
+    }
+    return "<span>Pass</span>"
+  }				    
+  var spanKing = ""
+  if(isTrump) {
+    spanKing = ' class="king-number"'
+  }
+  var content = "<span"+spanKing+">"+(Math.floor(number/7)+1)+"</span>"
+  
+  var imageName = ""
+  
+  switch (number%7) {
+    case 0:
+      imageName = "card-sm.png"
+    break;
+    case 1:
+      imageName = "card-md.png"
+    break;
+    case 2:
+      imageName = "card-clubs.png"
+    break;
+    case 3:
+      imageName = "card-diamand.png"
+    break;
+    case 4:
+      imageName = "card-heart.png"
+    break;
+    case 5:
+      imageName = "card-spade.png"
+    break;
+    case 6:
+      imageName = "card-nt.png"
+    break;
+  }
+  var imgClass = "list-img"
+  if(isTrump) {
+    imgClass = 'king-card-size'
+  }
+  content = content + '\n<img src="FB-image/' +imageName+'" class="'+imgClass+'">'
+  return content;
+}
+function playPoker(list,card) {
+
+  var Flowers = ["card-diamand.png","card-clubs.png","card-heart.png","card-spade.png"]
+  var Numbers = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
+  var numberIndex = (card-1)%13
+  var flowerIndex = Math.floor((card-1)/13)
+  var spanList = ""
+  if(!list) {
+    spanList = ' class="text-center card-number"'
+  }
+  var imgClass = "list-img"
+  if(!list) {
+    imgClass = 'card-img'
+  }
+  var content = "<span"+spanList+">"+Numbers[numberIndex]+"</span>"
+  content = content + '\n<img src="FB-image/' +Flowers[flowerIndex]+'" class="'+imgClass+'">'
+
+  return content;
+}
+
+</script>
+</body>
+</html>

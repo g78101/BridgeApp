@@ -1,10 +1,11 @@
 #coding=utf8
 
-from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-# import ssl
-import SocketServer
+from websocket_server import WebsocketServer
+import logging
 import threading
 import Type
+import time
+import pytz, datetime
 
 Trumps = [" SA"," MD"," C"," D"," H"," S"," NT"]
 Flowers = ["♦(D)","♣(C)","♥(H)","♠(S)"]
@@ -13,142 +14,176 @@ Numbers = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
 def showPokerStr(poker):
     return (" %s-%s,")%(Numbers[(poker-1)%13],Flowers[(poker-1)/13])
 
-class S(BaseHTTPRequestHandler):
+class S():
 
-    trumpHtml = '<div style="color:#000000;border:1px solid #333333; width:30%;height:200px; float: left; vertical-align:middle; padding: 10px ; text-align: center; line-height: 200px; font-size:45px">'
-    scoreHtml = '<div style="color:#000000;border:1px solid #333333; width:50%;height:200px; float: left; vertical-align:middle; padding: 10px; text-align: left;font-size:30px">'
-    nameHtml = '<div style="color:#000000; width:20%; float: left; vertical-align:middle; padding: 10px ; text-align: center; font-size:35px; height:50px; white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">'
-    callHtml = '<div style="border:1px solid #333333; width:20%; height:200px; float: left; vertical-align:middle; padding: 10px;font-size: 25px">'
-    playHtml = '<div style="border:1px solid #333333; width:20%; height:400px; float: left; vertical-align:middle; padding: 10px;font-size: 25px">'
-    cardHtml = '<div align="left" style="width:90%; height:200px; float: left; vertical-align:left; padding: 10px;font-size: 22px">'
-
-    players = [""] * 4
-    callsRecord = [""] * 4
-    threeModeUsers = [""] * 4
-    playsRecord = [""] * 4
-    playsPokerHand = [[] for i in range(4)]
-    threeModeIndex = [-1] * 4
-
-    trump = 'Waiting'
-    attackIndex = [-1] * 2
-    attackWinNumber = 7
-    attackTeam = ''
-    attackScore = 0
-    defenseTeam = ''
-    defenseScore = 0
-    threeMode = False
-
-    def log_request(self, code): pass
-
-    def _set_headers(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html; charset=utf-8')
-        self.send_header('refresh', '3')
-        self.end_headers()
-
-    def do_GET(self):
-        self._set_headers()
-        self.wfile.write('<html><head><title>BridgeApp</title></head>')
-        self.wfile.write('<body style="margin:20px"><div style="text-align: center;margin: 0;padding: 0;"><div>')
-        # title
-        self.wfile.write(self.trumpHtml)
-        self.wfile.write(self.trump+  '</div>')
-        self.wfile.write(self.scoreHtml)
-        self.wfile.write(self.attackTeam+ ' team<br>')
-        self.wfile.write('<div align="right">' + ("%d / %d")%(self.attackScore,self.attackWinNumber) + '</div><br>')
-        self.wfile.write(self.defenseTeam+ ' team<br>')
-        self.wfile.write('<div align="right">' + ("%d / %d")%(self.defenseScore,14-self.attackWinNumber) + '</div><br> </div></div>')
-        # name
-        for name in self.players:
-            self.wfile.write(self.nameHtml)
-            self.wfile.write(name+'</div>')
-        # call
-        for call in self.callsRecord:
-            self.wfile.write(self.callHtml)
-            subCall = call.split(',')
-            for temp in subCall:
-                self.wfile.write(temp + '<br>')
-            self.wfile.write('</div>')
-        # threeMode
-        if self.threeMode:
-            for name in self.threeModeUsers:
-                self.wfile.write(self.nameHtml)
-                self.wfile.write(name+'</div>')
-        # play
-        for play in self.playsRecord:
-            self.wfile.write(self.playHtml)
-            subPlay = play.split(',')
-            for temp in subPlay:
-                self.wfile.write(temp + '<br>')
-            self.wfile.write('</div>')
-        # show card
-        self.wfile.write(self.cardHtml)
-        for index in range(4):
-            str = self.players[index] + '<br>'
-            for card in self.playsPokerHand[index]:
-                str += showPokerStr(card)
-            self.wfile.write(str + '<br>')
-        self.wfile.write('</div>')
-
-        self.wfile.write('</body></html>')
-
-    def do_HEAD(self):
-        self._set_headers()
-
-class HttpServer:
     def __init__(self):
-        self.httpd = None
-        self.thread = None
-        self.handler_class = None
 
-    def run(self,server_class=HTTPServer, handler_class=S, port=3344):
-        server_address = ('', port)
-        self.httpd = server_class(server_address, handler_class)
-        # self.httpd.socket = ssl.wrap_socket (self.httpd.socket,
-        #                   keyfile='/etc/apache2/ssl.crt/private.key',
-        #                   certfile='/etc/apache2/ssl.crt/certificate.crt',
-        #                   ca_certs='/etc/apache2/ssl.crt/ca_bundle.crt',
-        #                   server_side=True)
-        print 'Httpd server started on port ' + str(port)
-        self.httpd.serve_forever()
+        self.players = [""] * 4
+        self.callsRecord = [""] * 4
+        self.callsRaw = [""] * 4
+        self.threeModeUsers = [""] * 4
+        self.playsRecord = [""] * 4
+        self.playsRaw = [""] * 4
+        self.boutsWinRecord = []
+        self.flowerCountRecord = [0] * 4
+        self.playsPokerHand = [[] for i in range(4)]
+        self.threeModeIndex = [-1] * 4
+
+        self.trump = 'Waiting'
+        self.trumpRaw = -1
+        self.attackIndex = [-1] * 2
+        self.attackWinNumber = 7
+        self.attackTeam = ''
+        self.attackScore = 0
+        self.defenseTeam = ''
+        self.defenseScore = 0
+        self.threeMode = False
+
+    def getUpdateInfo(self):
+
+        # trump^{info}^{Name}^{call}^{three}^{play}^{card}
+
+        info = ""
+        if self.attackTeam!="":
+            info = self.attackTeam + "|" + ("%d / %d")%(self.attackScore,self.attackWinNumber) + "|" + self.defenseTeam + "|" + ("%d / %d")%(self.defenseScore,14-self.attackWinNumber)
+        name = ""
+        for player in self.players:
+            name += player + "|"
+        name = name[:-1]
+        call = ""
+        subCalls = [[],[],[],[]]
+        for index in range(4):
+            subCalls[index] = self.callsRaw[index].split('^')
+        count=0;index=0;length=0
+        while 1:
+            subCall = subCalls[index]
+            str = ""
+            if length < len(subCall):
+                str = subCall[length]
+            if str == "":
+                count+=1
+                if count == 4:
+                    break
+            call += str + ","
+            if index+1 == 4:
+                index = 0
+                length += 1
+                call = call[:-1]
+                call += "|"
+            else:
+                index += 1
+        call = call[:-1]
+        three = ""
+        for player in self.threeModeUsers:
+            three += player + "|"
+        three = three[:-1]
+        play = ""
+        subPlays = [[],[],[],[]]
+        for index in range(4):
+            subPlays[index] = self.playsRaw[index].split('^')
+        count=0;index=0;length=0
+        while 1:
+            subPlay = subPlays[index]
+            str = ""
+            if length < len(subPlay):
+                str = subPlay[length]
+            if str == "":
+                count+=1
+                if count == 4:
+                    break
+            play += str + ","
+            if index+1 == 4:
+                index = 0
+                length += 1
+                play = play[:-1]
+                play += "|"
+            else:
+                index += 1
+        play = play[:-1]
+        winBount = ""
+        for bouts in self.boutsWinRecord:
+            winBount += ("%d|")%bouts
+        winBount = winBount[:-1]
+        flower = ""
+        for index in range(4):
+            flower += ("%d|")%self.flowerCountRecord[index]
+        flower = flower[:-1]
+        card = ""
+        if self.players[0]!="":
+            for index in range(4):
+                str = ""
+                for poker in self.playsPokerHand[index]:
+                    str += ("%d,")%poker
+                card += str[:-1] + "|"
+        card = card[:-1]
+        return ("%d")%self.trumpRaw + "^" + info + "^" + name + "^" + call + "^" + three + "^" + play + "^" + winBount + "^"+ flower + "^" +card
+
+class WebSocket:
+    def __init__(self):
+        self.server = None
+        self.S = None
+
+    # Called for every client connecting (after handshake)
+    def new_client(self,client, server):
+        #print("New client connected and was given id %d" % client['id'])
+        str = self.S.getUpdateInfo()
+        server.send_message(client,str)
+
+    # Called for every client disconnecting
+    def client_left(self,client, server):
+        #print("Client(%d) disconnected" % client['id'])
+        pass
 
     def start(self):
-        t = threading.Thread(target = self.run)
-        t.start()
+        port=3344
+        self.S = S()
+        self.server = WebsocketServer(port,host='0.0.0.0',loglevel=logging.CRITICAL)
+        self.server.set_fn_new_client(self.new_client)
+        self.server.set_fn_client_left(self.client_left)
+        server_thread = threading.Thread(target=self.server.run_forever)
+        server_thread.start()
 
     def stop(self):
-        self.httpd.server_close()
+        self.server.server_close()
 
     def reset(self):
-        S.players = [""] * 4
-        S.callsRecord = [""] * 4
-        S.threeModeUsers = [""] * 4
-        S.playsRecord = [""] * 4
-        S.playsPokerHand = [[] for i in range(4)]
-        S.threeModeIndex = [-1] * 4
 
-        S.trump = 'Waiting'
-        S.attackIndex = [-1] * 2
-        S.attackWinNumber = 7
-        S.attackTeam = ''
-        S.attackScore = 0
-        S.defenseTeam = ''
-        S.defenseScore = 0
-        S.threeMode = False
+        self.S.players = [""] * 4
+        self.S.callsRecord = [""] * 4
+        self.S.callsRaw = [""] * 4
+        self.S.threeModeUsers = [""] * 4
+        self.S.playsRecord = [""] * 4
+        self.S.playsRaw = [""] * 4
+        self.S.boutsWinRecord = []
+        self.S.flowerCountRecord = [0] * 4
+        self.S.playsPokerHand = [[] for i in range(4)]
+        self.S.threeModeIndex = [-1] * 4
+
+        self.S.trump = 'Waiting'
+        self.S.trumpRaw = -1
+        self.S.attackIndex = [-1] * 2
+        self.S.attackWinNumber = 7
+        self.S.attackTeam = ''
+        self.S.attackScore = 0
+        self.S.defenseTeam = ''
+        self.S.defenseScore = 0
+        self.S.threeMode = False
 
     def setPlayers(self,str):
-        S.players = str.split(',')
+        self.S.players = str.split(',')
+        self.server.send_message_to_all(self.S.getUpdateInfo())
 
     def setThreeModePlayers(self,str):
-        S.threeModeUsers = str.split(',')
+        self.S.threeModeUsers = str.split(',')
 
     def setThreeModeIndex(self,list):
-        S.threeModeIndex = list
+        self.S.threeModeIndex = list
 
     def setPlayersPoker(self,index,cards):
         cardArray = cards.split(',')
         for card in cardArray:
-            S.playsPokerHand[index].append(int(card))
+            self.S.playsPokerHand[index].append(int(card))
+        self.server.send_message_to_all(self.S.getUpdateInfo())
 
     def updateContent(self,str):
         connectState = str[0:1]
@@ -159,42 +194,45 @@ class HttpServer:
             trump = int(splitArray[1])
             lastUser = int(splitArray[3])
 
-            S.trump = ("%d%s")%(trump/7+1,Trumps[trump%7])
-            S.attackWinNumber = (trump/7+7)
+            self.S.trump = ("%d%s")%(trump/7+1,Trumps[trump%7])
+            self.S.trumpRaw = trump
+            self.S.attackWinNumber = (trump/7+7)
 
-            if S.threeMode:
-                S.attackIndex[0] = 0
-                S.attackIndex[1] = 2
+            if self.S.threeMode:
+                self.S.attackIndex[0] = 0
+                self.S.attackIndex[1] = 2
             else:
-                S.attackIndex[0] = (lastUser+1)%4
-                S.attackIndex[1] = (lastUser+3)%4
+                self.S.attackIndex[0] = (lastUser+1)%4
+                self.S.attackIndex[1] = (lastUser+3)%4
 
             attackTeam = ''
             defenseTeam = ''
 
             for i in range(0,4):
-                player = S.players[i]
-                if S.threeMode:
-                    player = S.threeModeUsers[i]
-                if i in S.attackIndex:
+                player = self.S.players[i]
+                if self.S.threeMode:
+                    player = self.S.threeModeUsers[i]
+                if i in self.S.attackIndex:
                     attackTeam = attackTeam + player + ' , '
                 else:
                     defenseTeam = defenseTeam + player + ' , '
-            S.attackTeam = attackTeam[0:len(attackTeam)-3]
-            S.defenseTeam = defenseTeam[0:len(defenseTeam)-3]
+            self.S.attackTeam = attackTeam[0:len(attackTeam)-3]
+            self.S.defenseTeam = defenseTeam[0:len(defenseTeam)-3]
 
         elif connectState == "T":
-            S.threeMode = True
+            self.S.threeMode = True
         elif connectState == "C":
             splitArray = info.split(',')
             lastUser = int(splitArray[0])
             trump = int(splitArray[2])
-            updateRecord = S.callsRecord[lastUser]
+            updateRecord = self.S.callsRecord[lastUser]
+            updateRaw = self.S.callsRaw[lastUser]
             if trump != -1:
                 tempStr = ("%d%s,")%((trump/7)+1,Trumps[trump%7])
             else:
                 tempStr = "Pass,"
-            S.callsRecord[lastUser] = updateRecord + tempStr
+            self.S.callsRecord[lastUser] = updateRecord + tempStr
+            self.S.callsRaw[lastUser] = updateRaw + ("%d^")%trump
 
         elif connectState == "P":
             splitArray = info.split(',')
@@ -202,19 +240,135 @@ class HttpServer:
             lastUser = (nextUser+4-1)%4
             poker = int(splitArray[0])
             playState = Type.PlayState(int(splitArray[1]))
-
+            
             if poker != 0:
                 removeIndex = lastUser
-                updateRecord = S.playsRecord[lastUser]
+                updateRecord = self.S.playsRecord[lastUser]
+                updateRaw = self.S.playsRaw[lastUser]
                 tempStr = showPokerStr(poker)
-                S.playsRecord[lastUser] = updateRecord + tempStr
-                if S.threeMode:
-                    removeIndex = S.threeModeIndex[lastUser]
-                S.playsPokerHand[removeIndex].remove(poker)
+                self.S.playsRecord[lastUser] = updateRecord + tempStr
+                self.S.playsRaw[lastUser] = updateRaw + ("%d^")%poker
+                flower = int((poker-1)/13)
+                self.S.flowerCountRecord[flower] += 1;
+                if self.S.threeMode:
+                    removeIndex = self.S.threeModeIndex[lastUser]
+                self.S.playsPokerHand[removeIndex].remove(poker)
             else:
-                if nextUser in S.attackIndex:
-                    S.attackScore += 1
+                if nextUser in self.S.attackIndex:
+                    self.S.attackScore += 1
                 else:
-                    S.defenseScore += 1
+                    self.S.defenseScore += 1
 
+                self.S.boutsWinRecord.append(nextUser)
+                if poker != 0:
+                    flower = int((poker-1)/13)
+                    self.S.flowerCountRecord[flower] += 1;
+                
+                for index in range(4):
+                    tempStr = self.S.playsRecord[index]
+                    tempStr = tempStr[:-1]
+                    if index == nextUser:
+                        tempStr+= "✓,"
+                    else:
+                        tempStr+= "✗,"
+                    self.S.playsRecord[index] = tempStr
+            
+            if playState == Type.PlayState.GameOver:
+                self.recordCSV()
+                self.saveShowRecord()
         
+        self.server.send_message_to_all(self.S.getUpdateInfo())
+
+    def recordCSV(self):
+        #{time},{trump},{threeMode},{name},{call},{play},{threeName}
+        file = open('record.csv',"a+")
+
+        timeStr = time.strftime("%Y-%m-%d %H:%M", time.localtime()) 
+
+        trumpStr = self.S.trump
+
+        nameStr = ""
+        for player in self.S.players:
+            nameStr += player + "|" 
+        nameStr = nameStr[:-1]
+
+        callStr = ""
+        for callRaw in self.S.callsRaw:
+            callStr += callRaw[0:-1] + "|"
+        callStr = callStr[:-1]
+
+        playStr = ""
+        for playRaw in self.S.playsRaw:
+            playStr += playRaw[0:-1] + "|"
+        playStr = playStr[:-1]
+
+        threeStr = ""
+        if self.S.threeModeUsers[0]!="":
+            for player in self.S.threeModeUsers:
+                threeStr += player + "|"
+            threeStr = threeStr[:-1]
+
+        file.write("%s,%s,%s,%s,%s,%s\n"%(timeStr,trumpStr,nameStr,callStr,playStr,threeStr))
+        file.close()
+
+    def saveShowRecord(self):
+        #{time},{trump},{name},{call},{threeName},{play}
+        file = open('/var/www/html/data/showRecord.csv',"a+")
+
+        local = pytz.timezone ("Etc/GMT+8")
+        naive = datetime.datetime.now()
+        local_dt = local.localize(naive, is_dst=None)
+        utc_dt = local_dt.astimezone(pytz.utc)
+        timeStr = utc_dt.strftime('%Y-%m-%d %H:%M')
+        
+        trumpStr = self.S.trump
+        
+        nameStr = ""
+        for player in self.S.players:
+            nameStr += player + "|" 
+        nameStr = nameStr[:-1]
+        
+        callStr = ""
+        subCalls = [[],[],[],[]]
+        for index in range(4):
+            subCalls[index] = self.S.callsRecord[index].split(',')
+        count=0;index=0;length=0
+        while 1:
+            subCall = subCalls[index]
+            str = ""
+            if length < len(subCall):
+                str = subCall[length]
+            if str == "":
+                count+=1
+                if count == 4:
+                    break
+            callStr += str + " - "
+            if index+1 == 4:
+                index = 0
+                length += 1
+                callStr = callStr[:-2]
+                callStr += "|"
+            else:
+                index += 1
+        callStr = callStr[:-1]
+        
+        threeStr = ""
+        if self.S.threeModeUsers[0]!="":
+            for player in self.S.threeModeUsers:
+                threeStr += player + "|"
+            threeStr = threeStr[:-1]
+        
+        playStr = ""
+        subPlays = [[],[],[],[]]
+        for index in range(4):
+            subPlays[index] = self.S.playsRecord[index].split(',')
+        for i in range(13):
+            for j in range(4):
+                subPlay = subPlays[j]
+                str = subPlay[i]
+                playStr += str + " | "
+            playStr = playStr[:-2]
+            playStr += ","
+        playStr = playStr[:-1]
+        file.write("%s,%s,%s,%s,%s,%s\n"%(timeStr,trumpStr,nameStr,callStr,threeStr,playStr))
+        file.close()
