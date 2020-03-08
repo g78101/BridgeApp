@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/callButtonsView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hbuttonsview0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.125"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hbuttonsview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hbuttonsview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.375"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hbuttonsview3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hbuttonsview4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.625"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hbuttonsview5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/hbuttonsview6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.875"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vbuttonsview0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1428"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vbuttonsview1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2856"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vbuttonsview2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4284"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vbuttonsview3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5712"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vbuttonsview4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.714"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/vbuttonsview5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8568"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton0"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview0"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview0"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview0"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview1"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview0"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview2"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview0"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview3"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview0"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview4"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview0"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton6"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview0"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton7"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview0"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview0"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview1"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton8"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview0"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview1"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview0"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview1"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton9"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview1"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview2"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview0"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview1"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton10"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview2"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview3"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview0"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview1"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview3"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview4"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview0"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview1"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton12"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview4"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview5"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview0"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview1"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton13"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview0"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview1"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton14"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview0"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview1"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview2"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton15"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview0"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview1"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview1"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview2"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton16"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview1"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview2"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview1"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview2"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton17"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview2"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview3"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview1"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview2"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton18"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview3"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview4"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview1"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview2"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton19"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview4"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview5"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview1"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview2"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton20"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview1"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview2"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton21"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview0"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview2"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview3"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton22"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview0"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview1"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview2"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview3"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton23"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview1"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview2"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview2"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview3"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton24"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview2"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview3"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview2"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview3"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton25"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview3"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview4"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview2"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview3"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton26"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview4"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview5"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview2"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview3"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton27"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview2"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview3"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton28"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview0"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview3"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview4"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton29"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview0"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview1"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview3"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview4"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton30"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview1"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview2"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview3"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview4"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton31"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview2"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview3"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview3"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview4"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton32"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview3"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview4"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview3"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview4"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton33"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview4"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview5"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview3"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview4"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton34"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview3"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview4"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton35"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview0"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview4"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview5"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton36"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview0"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview1"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview4"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview5"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton37"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview1"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview2"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview4"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview5"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton38"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview2"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview3"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview4"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview5"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton39"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview3"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview4"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview4"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview5"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton40"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview4"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview5"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview4"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview5"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton41"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview4"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview5"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton42"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview0"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview5"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview6"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton43"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview0"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview1"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview5"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview6"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton44"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview1"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview2"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview5"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview6"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton45"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview2"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview3"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview5"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview6"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton46"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview3"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview4"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview5"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview6"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton47"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview4"
+        app:layout_constraintEnd_toEndOf="@id/vbuttonsview5"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview5"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview6"/>
+
+    <com.talka.fancybridge.Views.Components.CallButton
+        android:id="@+id/callbutton48"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/vbuttonsview5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview5"
+        app:layout_constraintBottom_toBottomOf="@id/hbuttonsview6"/>
+
+    <Button
+        android:id="@+id/callPassButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:textColor="#ffff"
+        android:text="PASS"
+        android:background="@drawable/call_border"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hbuttonsview6"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

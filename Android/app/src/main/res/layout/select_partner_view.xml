@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/selectPartnerView"
+    android:background="#00000000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:text="Choosing Your Partner"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/chooseButton0"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:gravity="center"
+        android:text="AAA"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/partern_border"
+        app:layout_constraintBottom_toTopOf="@id/chooseButton1"
+        app:layout_constraintStart_toStartOf="@id/chooseButton1"
+        app:layout_constraintEnd_toEndOf="@id/chooseButton1"/>
+    
+    <Button
+        android:id="@+id/chooseButton1"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:gravity="center"
+        android:text="BBB"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:background="@drawable/partern_border"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/chooseButton2"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:gravity="center"
+        android:text="CCC"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/partern_border"
+        app:layout_constraintTop_toBottomOf="@id/chooseButton1"
+        app:layout_constraintStart_toStartOf="@id/chooseButton1"
+        app:layout_constraintEnd_toEndOf="@id/chooseButton1"/>
+
+    <Button
+        android:id="@+id/chooseOK"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:gravity="center"
+        android:text="OK"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:background="@drawable/ok_border"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/chooseButton1"
+        app:layout_constraintEnd_toEndOf="@id/chooseButton1"/>
+
+</android.support.constraint.ConstraintLayout>

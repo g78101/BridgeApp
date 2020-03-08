@@ -26,8 +26,8 @@ public class StreamManager {
         public void getData(String data);
     }
 
-    private static String ServerURL = "127.0.0.1";
-    private static int ServerPort = 9999;
+    private static String ServerURL = "talkaying.ga";
+    private static int ServerPort = 8888;
 
     private Thread thread;
     private Socket clientSocket;
@@ -36,7 +36,7 @@ public class StreamManager {
     private String tmp;
 
     public StreamManagerListener listener;
-    private Context context;
+    public Context context;
 
     public static synchronized StreamManager getInstance() {
         if (instance == null) {

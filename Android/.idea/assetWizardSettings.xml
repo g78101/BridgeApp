@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="54" />
+                                                <entry key="scalingPercent" value="67" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,22 +33,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="000000" />
-                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/untitled folder/AppIcon-512pt2x.png" />
-                                    </map>
-                                  </option>
-                                </PersistentState>
-                              </value>
-                            </entry>
-                            <entry key="launcherLegacy">
-                              <value>
-                                <PersistentState>
-                                  <option name="values">
-                                    <map>
-                                      <entry key="assetType" value="IMAGE" />
-                                      <entry key="backgroundColor" value="000000" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/untitled folder/AppIcon-512pt2x.png" />
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/../FancyBridge/FancyBridge/Assets.xcassets/AppIcon.appiconset/fancybridge512pt2x.png" />
                                     </map>
                                   </option>
                                 </PersistentState>

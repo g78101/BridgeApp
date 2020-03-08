@@ -6,54 +6,73 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.talka.fancybridge.Adapter.InfoCallView;
+import com.talka.fancybridge.Adapter.InfoPlayView;
 import com.talka.fancybridge.Manager.PokerManager;
 import com.talka.fancybridge.Manager.StateManager;
 import com.talka.fancybridge.R;
+import com.talka.fancybridge.Views.Components.CardView;
+import com.talka.fancybridge.Views.Components.FlowerCount;
+import com.talka.fancybridge.Views.Components.NamesText;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InfoView extends ConstraintLayout {
 
-    private ImageButton closeButton;
-    public List<TextView> nameLabels = new ArrayList<TextView>();
-    public List<TextView> callLabels = new ArrayList<TextView>();
-    public List<TextView> playLabels = new ArrayList<TextView>();
-    public List<TextView> flowerLabels = new ArrayList<TextView>();
+    public NamesText infoName;
+    public ListView infoCall;
+    public NamesText infoNameThree;
+    public ListView infoPlay;
+    public List<FlowerCount> flowerCounts = new ArrayList<FlowerCount>();
+
+    private InfoCallView callListAdapter;
+    private InfoPlayView playListAdapter;
 
     public InfoView(Context context) {
         super(context);
         LayoutInflater inflate = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflate.inflate(R.layout.info_view, this, true);
 
-        closeButton = (ImageButton) findViewById(R.id.closeButton);
-        nameLabels.add((TextView)findViewById(R.id.infoLabel0));
-        nameLabels.add((TextView)findViewById(R.id.infoLabel1));
-        nameLabels.add((TextView)findViewById(R.id.infoLabel2));
-        nameLabels.add((TextView)findViewById(R.id.infoLabel3));
-        callLabels.add((TextView)findViewById(R.id.infoCall0));
-        callLabels.add((TextView)findViewById(R.id.infoCall1));
-        callLabels.add((TextView)findViewById(R.id.infoCall2));
-        callLabels.add((TextView)findViewById(R.id.infoCall3));
-        playLabels.add((TextView)findViewById(R.id.infoPlay0));
-        playLabels.add((TextView)findViewById(R.id.infoPlay1));
-        playLabels.add((TextView)findViewById(R.id.infoPlay2));
-        playLabels.add((TextView)findViewById(R.id.infoPlay3));
-        flowerLabels.add((TextView)findViewById(R.id.flowerLabel0));
-        flowerLabels.add((TextView)findViewById(R.id.flowerLabel1));
-        flowerLabels.add((TextView)findViewById(R.id.flowerLabel2));
-        flowerLabels.add((TextView)findViewById(R.id.flowerLabel3));
+        infoName = (NamesText) findViewById(R.id.infoName);
+        infoCall = (ListView) findViewById(R.id.infoCall);
+        infoNameThree = (NamesText) findViewById(R.id.infoNameThree);
+        infoPlay = (ListView) findViewById(R.id.infoPlay);
+        flowerCounts.add((FlowerCount) findViewById(R.id.infoFlower0));
+        flowerCounts.add((FlowerCount) findViewById(R.id.infoFlower1));
+        flowerCounts.add((FlowerCount) findViewById(R.id.infoFlower2));
+        flowerCounts.add((FlowerCount) findViewById(R.id.infoFlower3));
+
+        callListAdapter = new InfoCallView(context);
+        infoCall.setAdapter(callListAdapter);
+        callListAdapter.isDefaultSytle = false;
+        infoCall.setDividerHeight(0);
+
+        playListAdapter = new InfoPlayView(context);
+        infoPlay.setAdapter(playListAdapter);
+        infoPlay.setDividerHeight(0);
 
         this.setOnClickListener(mCloseOnClickListener);
-        closeButton.setOnClickListener(mCloseOnClickListener);
+
+        infoName.setBackgroundResource(R.color.colorRedBG);
+        infoName.setPlayersName(StateManager.getInstance().players);
+
+        infoNameThree.setBackgroundResource(R.color.colorGreenBG);
+        infoNameThree.setPlayersName(StateManager.getInstance().players);
+
+        if(PokerManager.getInstance().threeMode) {
+            infoNameThree.setPlayersName(StateManager.getInstance().threeModePlayers);
+        }
+        else {
+            infoNameThree.getLayoutParams().height = 5;
+        }
 
         for(int i=0;i<4;++i) {
-            nameLabels.get(i).setText(StateManager.getInstance().players[i]);
-            callLabels.get(i).setText(PokerManager.getInstance().callsRecord[i]);
-            playLabels.get(i).setText(PokerManager.getInstance().playsRecord[i]);
-            flowerLabels.get(i).setText(String.format("%s:%d",CardView.Flowers[i],PokerManager.getInstance().flowerCountRecord[i]));
+            flowerCounts.get(i).setValue(PokerManager.Flowers[i],PokerManager.getInstance().flowerCountRecord[i]);
         }
     }
 

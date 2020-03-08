@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/waitview"
+    android:background="@color/colorBGGreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,69 +25,82 @@
         android:id="@+id/waitState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wait State"
-        android:textSize="20sp"
-        android:layout_marginTop="30dp"
+        android:text="Welcome to Bridge !"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:layout_marginTop="45dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:background="@drawable/border"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/waitview0"
         app:layout_constraintRight_toLeftOf="@id/waitview1"/>
 
-    <TextView
-        android:id="@+id/infoView"
+
+    <EditText
+        android:id="@+id/editText"
         android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:text=""
+        android:layout_height="62dp"
+        android:layout_marginTop="30dp"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        android:background="#DDDDDD"
+        android:padding="16dp"
+        android:imeOptions="actionDone"
+        android:textColor="#FFF"
+        android:textColorHint="#33FFFFFF"
+        android:hint="Your nickname"
+        android:background="#00914D"
         app:layout_constraintTop_toBottomOf="@id/waitState"
         app:layout_constraintLeft_toRightOf="@id/waitview0"
         app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_height="48dp"
+        android:layout_width="0dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/confirm_border"
+        android:text="Join(0/4)"
+        android:textSize="20sp"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/editText"
+        app:layout_constraintLeft_toRightOf="@id/waitview0"
+        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+    <Button
+        android:id="@+id/threemodebtn"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textColor="#fff"
+        android:visibility="invisible"
+        android:background="#00000000"
+        android:text="Three player mode(0/3)"
+        android:textSize="17sp"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/confirm"
+        app:layout_constraintLeft_toRightOf="@id/waitview0"
+        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ying"
+        app:layout_constraintBottom_toBottomOf="@id/waitview"
+        app:layout_constraintLeft_toLeftOf="@id/waitview"
+        app:layout_constraintRight_toRightOf="@id/waitview"/>
 
     <TextView
         android:id="@+id/versionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="123"
-        android:textColor="#000"
+        android:textColor="#FFF"
         android:textAlignment="textEnd"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/infoView"
-        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:textSize="20sp"
-        android:imeOptions="actionDone"
-        android:background="@drawable/border"
-        app:layout_constraintTop_toBottomOf="@id/infoView"
-        app:layout_constraintLeft_toRightOf="@id/waitview0"
-        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
-
-    <Button
-        android:id="@+id/confirm"
-        android:layout_height="42dp"
-        android:layout_width="0dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginTop="20dp"
-        android:text="Confirm"
-        android:textSize="16sp"
-        android:enabled="false"
-        app:layout_constraintTop_toBottomOf="@id/editText"
-        app:layout_constraintLeft_toRightOf="@id/waitview0"
-        app:layout_constraintRight_toLeftOf="@id/waitview1"/>
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/waitview"
+        app:layout_constraintRight_toRightOf="@+id/waitview"/>
 
 </android.support.constraint.ConstraintLayout>

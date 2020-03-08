@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recordview"
+    android:background="#00000000"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/recordviewline0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/recordviewline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/recordviewline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/numberText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textAlignment="center"
+        android:layout_marginBottom="4dp"
+        android:textColor="#FF333333"
+        android:textSize="18sp"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintEnd_toEndOf="@id/recordviewline2"
+        app:layout_constraintTop_toTopOf="@id/recordviewline0"
+        app:layout_constraintBottom_toBottomOf="@id/recordviewline1"/>
+
+    <ImageView
+        android:id="@+id/flowerImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:scaleType="fitStart"
+        app:layout_constraintStart_toStartOf="@id/recordviewline2"
+        app:layout_constraintTop_toTopOf="@id/recordviewline0"
+        app:layout_constraintBottom_toBottomOf="@id/recordviewline1" />
+
+    <TextView
+        android:id="@+id/otherCallText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="#FF333333"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recordviewline0"
+        app:layout_constraintBottom_toBottomOf="@id/recordviewline1" />
+
+</android.support.constraint.ConstraintLayout>

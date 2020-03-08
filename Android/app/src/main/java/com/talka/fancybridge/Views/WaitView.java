@@ -3,6 +3,7 @@ package com.talka.fancybridge.Views;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.InputType;
@@ -21,10 +22,13 @@ import com.talka.fancybridge.R;
 
 public class WaitView extends ConstraintLayout {
 
-    private TextView infoView;
+    static String comfirmText = "Join (%d/4)";
+    static String threeModeText = "Three player mode(%d/3)";
+
     private TextView versionView;
     private EditText editText;
     private Button confirm;
+    private Button threeModeBtn;
 
     public WaitView(Context context) {
         super(context);
@@ -44,10 +48,10 @@ public class WaitView extends ConstraintLayout {
     private void init(Context context) {
         LayoutInflater inflate = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflate.inflate(R.layout.wait_view, this, true);
-        infoView = (TextView) findViewById(R.id.infoView);
         versionView = (TextView) findViewById(R.id.versionView);
         editText = (EditText) findViewById(R.id.editText);
         confirm = (Button) findViewById(R.id.confirm);
+        threeModeBtn = (Button) findViewById(R.id.threemodebtn);
 
         String versionStr = "";
         try {
@@ -67,7 +71,7 @@ public class WaitView extends ConstraintLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                confirm.setEnabled(s.length() != 0);
+                confirm.setEnabled(true);
             }
 
             @Override
@@ -79,7 +83,7 @@ public class WaitView extends ConstraintLayout {
         editText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    Log.d("onKey: ","123");
+                    editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
                     return true;
                 }
                 return false;
@@ -90,7 +94,10 @@ public class WaitView extends ConstraintLayout {
             @Override
             public void onClick(View view) {
 
-                if(!editText.getText().equals("")) {
+                if(editText.getText().length() > 5) {
+                    AlertView.showViewSetText(getContext(),"Please enter less 5 length name");
+                }
+                else if(editText.getText().length() != 0) {
                     StateManager.getInstance().playInfo.name = ""+editText.getText();
                     StateManager.getInstance().connectServer();
                     confirm.setEnabled(false);
@@ -98,22 +105,29 @@ public class WaitView extends ConstraintLayout {
                     editText.setEnabled(false);
                 }
                 else {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setTitle("Warning");
-                    alert.setMessage("Please enter name");
-                    alert.setNegativeButton("OK", null);
-                    alert.show();
+                    AlertView.showViewSetText(getContext(),"Please enter name");
                 }
             }
         });
+
+        threeModeBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                threeModeBtn.setEnabled(false);
+                StateManager.getInstance().joinThreeMode();
+            }
+        });
+
+        threeModeBtn.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
     }
 
-    public void clearInfo() {
-        infoView.setText("");
+    public void clear() {
+        threeModeBtn.setEnabled(true);
     }
 
-    public void updateInfo(String str) {
-        infoView.setText(infoView.getText() + str +"\n");
+    public void updateUI(int normalCount,int threeModeCount) {
+        confirm.setText(String.format(WaitView.comfirmText,normalCount));
+        threeModeBtn.setText(String.format(WaitView.threeModeText,threeModeCount));
+        threeModeBtn.setVisibility(VISIBLE);
     }
-
 }

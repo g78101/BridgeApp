@@ -2,7 +2,9 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/playview"
+    android:background="@color/colorBGGreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,17 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.125"/>
+        app:layout_constraintGuide_percent="0.172"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/playview1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.25"/>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/playview2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -32,28 +27,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33"/>
+        app:layout_constraintGuide_percent="0.5"/>
 
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#29FC2E "
+        android:background="#009257"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/playview1"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/playview0"/>
 
-    <com.talka.fancybridge.Views.CardsView
+    <com.talka.fancybridge.Views.Components.CardsView
         android:id="@+id/playcards"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        app:layout_constraintTop_toTopOf="@id/playview2"
+        app:layout_constraintTop_toTopOf="@id/playview1"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.talka.fancybridge.Views.CardsView
+    <com.talka.fancybridge.Views.Components.CardsView
         android:id="@+id/leftCards"
         android:layout_width="350dp"
         android:layout_height="130dp"
@@ -67,20 +62,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.talka.fancybridge.Views.CardsView
+    <com.talka.fancybridge.Views.Components.CardsView
         android:id="@+id/topCards"
         android:layout_width="350dp"
         android:layout_height="130dp"
-        android:scaleX="0.5"
-        android:scaleY="0.5"
-        android:rotation="180"
-        android:layout_marginBottom="220dp"
+        tools:layout_editor_absoluteX="17dp"
+        tools:layout_editor_absoluteY="121dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="@id/playview0" />
 
-    <com.talka.fancybridge.Views.CardsView
+    <com.talka.fancybridge.Views.Components.CardsView
         android:id="@+id/rightCards"
         android:layout_width="350dp"
         android:layout_height="130dp"
@@ -94,117 +86,176 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <TextView
-        android:id="@+id/trumpText"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/border"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:textSize="18sp"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:text="123"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/playview3"
-        app:layout_constraintBottom_toBottomOf="@id/playview0"/>
-
-    <Button
-        android:id="@+id/historyBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:textAlignment="center"
-        android:text="History"
-        android:textSize="18sp"
-        android:background="@drawable/border"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintTop_toTopOf="@id/playview0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/playview3"
-        app:layout_constraintBottom_toBottomOf="@id/playview1"/>
-
-    <TextView
-        android:id="@+id/teamInfo"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/border"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:textSize="18sp"
-        android:gravity="center_vertical"
-        android:text="123"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="@id/playview3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/playview1" />
-
-    <TextView
+    <ImageView
         android:id="@+id/turn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:layout_marginTop="55dp"
-        android:textAlignment="center"
-        android:gravity="center"
-        android:text="⊕"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@mipmap/turn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/tableIndex0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="3"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="@id/turn"
+        app:layout_constraintEnd_toEndOf="@id/turn"
+        app:layout_constraintTop_toTopOf="@id/turn"
+        app:layout_constraintBottom_toBottomOf="@id/turn"/>
+
+    <TextView
+        android:id="@+id/tableIndex1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="4"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintStart_toStartOf="@id/turn"
+        app:layout_constraintEnd_toEndOf="@id/turn"
+        app:layout_constraintTop_toTopOf="@id/turn"
+        app:layout_constraintBottom_toBottomOf="@id/turn"/>
+
+    <TextView
+        android:id="@+id/tableIndex2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="1"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintStart_toStartOf="@id/turn"
+        app:layout_constraintEnd_toEndOf="@id/turn"
+        app:layout_constraintTop_toTopOf="@id/turn"
+        app:layout_constraintBottom_toBottomOf="@id/turn"/>
+
+    <TextView
+        android:id="@+id/tableIndex3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="2"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toStartOf="@id/turn"
+        app:layout_constraintEnd_toEndOf="@id/turn"
+        app:layout_constraintTop_toTopOf="@id/turn"
+        app:layout_constraintBottom_toBottomOf="@id/turn"/>
+
+    <View
+        android:id="@+id/playLine"
+        android:layout_width="1dp"
+        android:layout_height="33dp"
+        android:background="#4CFFFFFF"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
     
+    <TextView
+        android:id="@+id/trumpText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="18dp"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="#FFFF"
+        android:text="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/playLine"
+        app:layout_constraintBottom_toBottomOf="@id/playview0"/>
+
     <ImageView
+        android:id="@+id/trumpType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/border_clubs"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="21dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/playLine"
+        app:layout_constraintBottom_toBottomOf="@id/playview0"/>
+
+    <TextView
+        android:id="@+id/teamInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:textSize="18sp"
+        android:text="123"
+        android:textAlignment="textStart"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/playLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/playview0" />
+    
+    <ImageButton
+        android:id="@+id/historyBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/history_btn"
+        android:background="#00000000"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="@id/playview"
+        app:layout_constraintBottom_toBottomOf="@id/playview"/>
+    
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/tablePokers2"
-        android:layout_width="44dp"
-        android:layout_height="75dp"
-        android:scaleType="fitXY"
+        android:layout_width="46dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/turn"/>
 
-    <ImageView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/tablePokers1"
-        android:layout_width="44dp"
-        android:layout_height="75dp"
-        android:scaleType="fitXY"
+        android:layout_width="46dp"
+        android:layout_height="70dp"
         android:layout_marginTop="55dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tablePokers2"/>
+        app:layout_constraintEnd_toStartOf="@id/turn"/>
 
-    <ImageView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/tablePokers0"
-        android:layout_width="44dp"
-        android:layout_height="75dp"
-        android:scaleType="fitXY"
+        android:layout_width="46dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/turn"/>
 
-    <ImageView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/tablePokers3"
-        android:layout_width="44dp"
-        android:layout_height="75dp"
-        android:scaleType="fitXY"
+        android:layout_width="46dp"
+        android:layout_height="70dp"
         android:layout_marginTop="55dp"
+        android:layout_marginStart="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tablePokers2"/>
+        app:layout_constraintStart_toEndOf="@id/turn"/>
 
-    <Button
-        android:id="@+id/againBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="Play Again"
+    <com.talka.fancybridge.Views.Components.FinishView
+        android:id="@+id/finishView"
+        android:layout_width="300dp"
+        android:layout_height="421dp"
+        android:layout_marginTop="13dp"
+        android:background="#00000000"
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/playview2" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    
 </android.support.constraint.ConstraintLayout>

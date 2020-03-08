@@ -55,7 +55,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.5"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview0"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -66,7 +66,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview0"
         app:layout_constraintBottom_toBottomOf="@id/cardsview6"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview1"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -77,7 +77,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview1"
         app:layout_constraintBottom_toBottomOf="@id/cardsview6"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview2"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -88,7 +88,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview2"
         app:layout_constraintBottom_toBottomOf="@id/cardsview6"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview3"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -99,7 +99,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview3"
         app:layout_constraintBottom_toBottomOf="@id/cardsview6"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview4"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -110,7 +110,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview4"
         app:layout_constraintBottom_toBottomOf="@id/cardsview6"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview5"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -121,7 +121,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview5"
         app:layout_constraintBottom_toBottomOf="@id/cardsview6"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview6"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -132,7 +132,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/cardsview6"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview7"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -143,7 +143,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview0"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview8"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -154,7 +154,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview1"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview9"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -165,7 +165,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview2"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview10"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -176,7 +176,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview3"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview11"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -187,7 +187,7 @@
         app:layout_constraintRight_toLeftOf="@id/cardsview4"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <com.talka.fancybridge.Views.CardView
+    <com.talka.fancybridge.Views.Components.CardView
         android:id="@+id/cardview12"
         android:layout_width="0dp"
         android:layout_height="0dp"

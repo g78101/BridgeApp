@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 
+import com.talka.fancybridge.Manager.PokerManager;
 import com.talka.fancybridge.Manager.StateManager;
 import com.talka.fancybridge.Views.CallView;
 import com.talka.fancybridge.Views.PlayView;
@@ -20,7 +22,9 @@ public class MainActivity extends AppCompatActivity implements StateManager.Stat
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         mWaitView = (WaitView)findViewById(R.id.wait);
@@ -34,6 +38,12 @@ public class MainActivity extends AppCompatActivity implements StateManager.Stat
         mWaitView.setVisibility(View.VISIBLE);
         mCallView.setVisibility(View.INVISIBLE);
         mPlayView.setVisibility(View.INVISIBLE);
+
+//        StateManager.getInstance().players = new String[]{"我我我我我", "我我我我我", "我我我我我","我我我我我"};
+//        PokerManager.getInstance().setCards( new String[]{"1", "2", "3","14","15", "16", "27","28","29", "40", "41","42","0"});
+//        mWaitView.setVisibility(View.INVISIBLE);
+//        mCallView.setVisibility(View.INVISIBLE);
+//        mPlayView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -44,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements StateManager.Stat
     }
 
     @Override
-    public void updateWaitingUI(String text) {
-        mWaitView.updateInfo(text);
+    public void updateWaitingUI(int normalCount,int threeModeCount) {
+        mWaitView.updateUI(normalCount, threeModeCount);
     }
 
     @Override
@@ -53,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements StateManager.Stat
 
         switch (state) {
             case Wait:
-                mWaitView.clearInfo();
+                mWaitView.clear();
                 mWaitView.setVisibility(View.VISIBLE);
                 mCallView.setVisibility(View.INVISIBLE);
                 mPlayView.setVisibility(View.INVISIBLE);
