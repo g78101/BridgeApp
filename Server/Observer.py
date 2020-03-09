@@ -58,12 +58,13 @@ class S():
         while 1:
             subCall = subCalls[index]
             str = ""
-            if length < len(subCall):
+            if length < len(subCall) and subCall[length]!="":
                 str = subCall[length]
-            if str == "":
+            elif(subCalls[index]!=""):
                 count+=1
-                if count == 4:
-                    break
+                subCalls[index]=""
+            if count == 4:
+                break
             call += str + ","
             if index+1 == 4:
                 index = 0
@@ -87,14 +88,13 @@ class S():
             str = ""
             if length < len(subPlay):
                 str = subPlay[length]
-            if str == "":
-                count+=1
-                if count == 4:
-                    break
+            if count == 13:
+                break
             play += str + ","
             if index+1 == 4:
                 index = 0
                 length += 1
+                count += 1
                 play = play[:-1]
                 play += "|"
             else:
@@ -321,7 +321,10 @@ class WebSocket:
         utc_dt = local_dt.astimezone(pytz.utc)
         timeStr = utc_dt.strftime('%Y-%m-%d %H:%M')
         
-        trumpStr = self.S.trump
+        winFlag = "✓"
+        if(self.S.attackScore<self.S.attackWinNumber):
+            winFlag = "✗"
+        trumpStr = ("%s %s %d:%d")%(self.S.trump,winFlag,self.S.attackScore,self.S.defenseScore)
         
         nameStr = ""
         for player in self.S.players:
@@ -336,12 +339,14 @@ class WebSocket:
         while 1:
             subCall = subCalls[index]
             str = ""
-            if length < len(subCall):
+            if length < len(subCall) and subCall[length]!="":
                 str = subCall[length]
-            if str == "":
+            elif(subCalls[index]!=""):
                 count+=1
-                if count == 4:
-                    break
+                subCalls[index]=""
+            
+            if count == 4:
+                break
             callStr += str + " - "
             if index+1 == 4:
                 index = 0
