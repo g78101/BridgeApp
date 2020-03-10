@@ -26,7 +26,8 @@ public class StreamManager {
         public void getData(String data);
     }
 
-    private static String ServerURL = "talkaying.ga";
+    // private static String ServerURL = "talkaying.ga";
+    private static String ServerURL = "localhost";
     private static int ServerPort = 8888;
 
     private Thread thread;

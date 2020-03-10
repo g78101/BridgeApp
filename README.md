@@ -20,10 +20,12 @@ The trunp:</br>
 ### iOS Side:
 1. open **FancyBridge.xcodeproj**
 2. in xcode: **run**
-
+	</br>*( change ServerURL at StreamManager.swif )*
+	
 ### Android Side:
 1. using **Android Studio** open **Android/**
 2. in Android Studio: **run**
+	</br>*( change ServerURL at StreamManager.java )*
 
 P.S. The game will begin when four players connected or three players clicked **Three player mode**
 
