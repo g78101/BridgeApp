@@ -6,9 +6,8 @@ The FancyBridge is a game of poker.
 The trunp:</br>
 &nbsp;&nbsp;**Small < Middle < Club < Diamond < Heart < Spades < No Trump**
 
-2. I add three players mode.
-
-Each person bids respectively. Declarer can choose teammate ( other player or Space )
+2. I add three players mode.</br>
+&nbsp;&nbsp;Each person bids respectively. Declarer can choose teammate ( other player or Space )
 
 # How to play
 
