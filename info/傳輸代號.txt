@@ -2,7 +2,7 @@
 
 {代碼}{訊息}
 
-S : 狀態 (wait-0、call-1、play-2)
+S : 狀態 (connected=-1、wait=0、call=1、play=2)
 ->	server S0,index
 ->	server S1,(先喊),(threeMode)
 ->	server S2,(王牌),(先出),(最後一個pass)
@@ -33,3 +33,18 @@ C : 喊牌
 P : 出牌 (牌0代表等待判別
 ->	client P{index},12
 ->	server P{牌},{PlayState},{NextUser}
+
+D : 斷線
+-> server D{status}
+-> server D0 wait
+-> server D1 recover
+-> server D2 close
+
+R : 恢復
+-> server R{stauts}
+-> server R1^{cards}^{ThreeModeCards}
+-> server R2^{turnIndex}^{name}^{threeModeName}
+-> server R3^{callRecord}
+-> server R4^{playRecord}
+-> server R5^{boutsWinRecord}
+-> server R6^{RoomStatus}^{turn}^{trump}^{callLast}
