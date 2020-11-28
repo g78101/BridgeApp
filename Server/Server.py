@@ -128,7 +128,7 @@ if __name__ == "__main__":
                                     for recoverInfo in recoverList:
                                         sock.send(sendData(recoverInfo))
                                     reconnect = True
-                                    sendDataToRoom(room,"D1")
+                                    sendDataToRoom(room,sendData("D1"))
                                     break
                             if reconnect == False:
                                 newRoom = True
@@ -204,11 +204,11 @@ if __name__ == "__main__":
                                     if interruptList[i] > roomIndex:
                                         interruptList[i]-=1
                                 interruptList.remove(roomIndex)
-                                sendDataToRoom(room,"D2")
+                                sendDataToRoom(room,sendData("D2"))
                                 removeRoomSockets(room)
                             else:
                                 interruptList.append(roomIndex)
-                                sendDataToRoom(room,"D0")
+                                sendDataToRoom(room,sendData("D0"))
                  
                 except:
                     continue
