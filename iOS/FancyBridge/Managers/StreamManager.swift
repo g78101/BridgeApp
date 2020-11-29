@@ -8,13 +8,15 @@
 
 import UIKit
 
-//let ServerURL = "talkaying.ga"
-let ServerURL = "127.0.0.1"
+let ServerURL = "talkaying.ga"
+//let ServerURL = "127.0.0.1"
+//let ServerURL = "192.168.1.26"
 let ServerPort = 8888
 let bufferSize = 1024
 
 protocol StreamManagerDelegate:class {
     func getData(_ data:String)
+    func connectInterrupt()
 }
 
 class StreamManager: NSObject, StreamDelegate {
@@ -101,7 +103,10 @@ class StreamManager: NSObject, StreamDelegate {
         
         if (eventCode == .errorOccurred) {
             DispatchQueue.main.async {
-                UIAlertController.showAlert(title: "Server Error", message: "Something is wrong")
+                let cancelAction:UIAlertAction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
+                    exit(1)
+                    })
+                UIAlertController.showAlert(title: "Server Error",message: "Something is wrong, Pleases restart App.",actions: [cancelAction])
             }
             
         }
@@ -121,13 +126,9 @@ class StreamManager: NSObject, StreamDelegate {
                             self.delegate.getData(String(subData))
                         }
                     }
-                    else if !StateManager.getInstance().isGameOver {
+                    else {
                         // error func
-                        let cancelAction:UIAlertAction = UIAlertAction(title: "OK", style: .default, handler: { (UIAlertAction) in
-                                exit(1)
-                            })
-                        
-                        UIAlertController.showAlert(title: "Server Error",message: "Something is wrong",actions: [cancelAction])
+                        self.delegate.connectInterrupt()
                     }
                 }
             }

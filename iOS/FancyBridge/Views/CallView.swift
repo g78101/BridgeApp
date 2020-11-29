@@ -262,6 +262,7 @@ class CallView: UIView, PokerManagerDelegate, StateManagerCallDelegate {
             callButtonsView.isHidden = true
         }
         else {
+            callButtonsView.alpha = 0.5
             LoadingView.StartLoading()
         }
     }

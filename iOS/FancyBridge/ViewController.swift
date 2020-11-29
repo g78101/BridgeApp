@@ -114,6 +114,7 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
     func changeStateUI(_ state: GameState) {
         
         switch state {
+        case .Connected: break
         case .Wait:
             threeModeButton.isEnabled = true
             waitView.isHidden = false
@@ -122,6 +123,12 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
             playView.isHidden = true
             break
         case .Call:
+            waitView.isHidden = true
+            bottomView.isHidden = true
+            callView.isHidden = false
+            playView.isHidden = true
+            break
+        case .CallChoosePartner:
             waitView.isHidden = true
             bottomView.isHidden = true
             callView.isHidden = false

@@ -15,10 +15,7 @@ class PlayView: UIView, StateManagerPlayDelegate {
     static let TunrArray = [0,CGFloat(90.0 * Float.pi / 180.0),CGFloat(180 * Float.pi / 180.0),CGFloat(270.0 * Float.pi / 180.0)]
     
     // MARK: - UI Member
-    var cardsView:CardsView = CardsView()
-    var rightCardsView:CardsView = CardsView()
-    var leftCardsView:CardsView = CardsView()
-    var topCardsView:CardsView = CardsView()
+    var playerCardsView:[CardsView] = Array<CardsView>()
     var turnView:UIImageView = UIImageView()
     var tableIndex:[UILabel] = Array<UILabel>()
     var tablePokers:[CardView] = Array<CardView>()
@@ -56,10 +53,6 @@ class PlayView: UIView, StateManagerPlayDelegate {
         lineView.translatesAutoresizingMaskIntoConstraints = false
         finishView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.addSubview(cardsView)
-        self.addSubview(leftCardsView)
-        self.addSubview(topCardsView)
-        self.addSubview(rightCardsView)
         self.addSubview(turnView)
         self.addSubview(history)
         
@@ -70,6 +63,10 @@ class PlayView: UIView, StateManagerPlayDelegate {
         titleView.addSubview(teamInfo)
         
         for _ in 0..<4 {
+            let cardsView:CardsView = CardsView()
+            playerCardsView.append(cardsView)
+            self.insertSubview(cardsView, belowSubview: history)
+            
             let cardView:CardView = CardView()
             cardView.translatesAutoresizingMaskIntoConstraints = false
             cardView.setEnable(false)
@@ -89,14 +86,14 @@ class PlayView: UIView, StateManagerPlayDelegate {
         
         history.addTarget(self, action: #selector(self.touchUpInside(_:)), for: .touchUpInside)
         
-        leftCardsView.otherPlayer()
-        leftCardsView.setSmallFont()
-        leftCardsView.setEnable(false)
-        rightCardsView.otherPlayer()
-        rightCardsView.setSmallFont()
-        rightCardsView.setEnable(false)
-        topCardsView.setSmallFont()
-        topCardsView.setEnable(false)
+        playerCardsView[1].otherPlayer()
+        playerCardsView[3].otherPlayer()
+        for i in 1..<4 {
+            playerCardsView[i].setSmallFont()
+            playerCardsView[i].setEnable(false)
+        }
+        playerCardsView[0].setEnable(false)
+        
         turnView.image = UIImage(named: "turn")
         
         trumpNumber.textAlignment = .center
@@ -115,11 +112,11 @@ class PlayView: UIView, StateManagerPlayDelegate {
         titleView.backgroundColor = UIColor(red: 0, green: 146.0/255, blue: 87.0/255, alpha: 1.0)
         history.setBackgroundImage(UIImage(named: "history-btn"), for: .normal)
         
-        // cardsView
-        addConstraint(NSLayoutConstraint(item: cardsView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -15))
-        addConstraint(NSLayoutConstraint(item: cardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
-        addConstraint(NSLayoutConstraint(item: cardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.95, constant: 0))
-        addConstraint(NSLayoutConstraint(item: cardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 3, constant: 0))
+        // playerCardsView[0]
+        addConstraint(NSLayoutConstraint(item: playerCardsView[0], attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -15))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[0], attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[0], attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.95, constant: 0))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[0], attribute: .height, relatedBy: .equal, toItem: playerCardsView[0], attribute: .width, multiplier: 0.129 * 3, constant: 0))
         
         // finishView
         addConstraint(NSLayoutConstraint(item: finishView, attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: 0))
@@ -129,25 +126,25 @@ class PlayView: UIView, StateManagerPlayDelegate {
         
         let move:CGFloat = ( UIScreen.main.bounds.size.height > 568 ) ? 145 : 125
         
-        // leftCardsView
-        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 20))
-        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: -1 * move))
-        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
-        addConstraint(NSLayoutConstraint(item: leftCardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
-        leftCardsView.transform = CGAffineTransform(rotationAngle: CGFloat(90.0 * Float.pi / 180.0) )
+        // playerCardsView[1]
+        addConstraint(NSLayoutConstraint(item: playerCardsView[1], attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 20))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[1], attribute: .centerX, relatedBy: .equal, toItem: turnView, attribute: .centerX, multiplier: 1.0, constant: -1 * move))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[1], attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[1], attribute: .height, relatedBy: .equal, toItem: playerCardsView[0], attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
+        playerCardsView[1].transform = CGAffineTransform(rotationAngle: CGFloat(90.0 * Float.pi / 180.0) )
         
-        // topCardsView
-        addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: 35))
-        addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
-        addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
-        addConstraint(NSLayoutConstraint(item: topCardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
+        // playerCardsView[2]
+        addConstraint(NSLayoutConstraint(item: playerCardsView[2], attribute: .top, relatedBy: .equal, toItem: titleView, attribute: .bottom, multiplier: 1.0, constant: 35))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[2], attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[2], attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[2], attribute: .height, relatedBy: .equal, toItem: playerCardsView[0], attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
         
-        // rightCardsView
-        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: -20))
-        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: move))
-        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
-        addConstraint(NSLayoutConstraint(item: rightCardsView, attribute: .height, relatedBy: .equal, toItem: cardsView, attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
-        rightCardsView.transform = CGAffineTransform(rotationAngle: CGFloat(270.0 * Float.pi / 180.0) )
+        // playerCardsView[3]
+        addConstraint(NSLayoutConstraint(item: playerCardsView[3], attribute: .centerY, relatedBy: .equal, toItem: turnView, attribute: .centerY, multiplier: 1.0, constant: -20))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[3], attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: move))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[3], attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 0.5, constant: 0))
+        addConstraint(NSLayoutConstraint(item: playerCardsView[3], attribute: .height, relatedBy: .equal, toItem: playerCardsView[0], attribute: .width, multiplier: 0.129 * 1.5, constant: 0))
+        playerCardsView[3].transform = CGAffineTransform(rotationAngle: CGFloat(270.0 * Float.pi / 180.0) )
         
         // turnView
         addConstraint(NSLayoutConstraint(item: turnView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 35))
@@ -238,7 +235,6 @@ class PlayView: UIView, StateManagerPlayDelegate {
         titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .width, relatedBy: .equal, toItem: titleView, attribute: .width, multiplier: 0.45, constant: 0))
         titleView.addConstraint(NSLayoutConstraint(item: teamInfo, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50))
         
-        cardsView.setEnable(false)
         stateManager.playDelegate = self
     }
     
@@ -256,43 +252,36 @@ class PlayView: UIView, StateManagerPlayDelegate {
             LoadingView.StopLoading()
             InfoView.clear()
             if !setHidden {
-                cardsView.setHandCards(pokerManager.cards)
-                cardsView.tag = stateManager.playInfo.turnIndex
-                leftCardsView.tag = (stateManager.playInfo.turnIndex+1)%4
-                topCardsView.tag = (stateManager.playInfo.turnIndex+2)%4
-                rightCardsView.tag = (stateManager.playInfo.turnIndex+3)%4
+                for i in 0..<4 {
+                    playerCardsView[i].resetCard()
+                    playerCardsView[i].tag = (stateManager.playInfo.turnIndex+i)%4
+                }
                 
-                cardsView.resetCard()
-                leftCardsView.resetCard()
-                topCardsView.resetCard()
-                rightCardsView.resetCard()
-                
-                // Three Mode
-                if pokerManager.threeMode && pokerManager.twoCardsPlay() {
-                    topCardsView.setHandCards(pokerManager.otherCards)
-                    topCardsView.transform = CGAffineTransform.init(scaleX: 1.6, y: 1.6)
+                if pokerManager.threeMode {
+                    if pokerManager.twoCardsPlay() {
+                        playerCardsView[2].setHandCards(pokerManager.otherCards)
+                        playerCardsView[2].transform = CGAffineTransform.init(scaleX: 1.6, y: 1.6)
+                        playerCardsView[2].checkCardsPlay()
+                    }
+                    else {
+                        let findUIindex = findUIIndexFunc(pokerManager.comIndex)
+                        playerCardsView[findUIindex].setHandCards(pokerManager.otherCards)
+                        playerCardsView[2].otherPlayer()
+                        playerCardsView[2].transform = CGAffineTransform(rotationAngle: CGFloat(180.0 * Float.pi / 180.0) )
+                    }
                 }
                 else {
-                    topCardsView.otherPlayer()
-                    topCardsView.transform = CGAffineTransform(rotationAngle: CGFloat(180.0 * Float.pi / 180.0) )
+                    for i in 1..<4 {
+                        playerCardsView[i].otherPlayer()
+                        if i==2 {
+                            playerCardsView[i].transform = CGAffineTransform(rotationAngle: CGFloat(180.0 * Float.pi / 180.0) )
+                        }
+                    }
                 }
                 
-                cardsView.checkCardsPlay()
-                topCardsView.checkCardsPlay()
+                playerCardsView[0].setHandCards(pokerManager.cards)
+                playerCardsView[0].checkCardsPlay()
 
-                if pokerManager.comIndex == leftCardsView.tag {
-                    leftCardsView.setHandCards(pokerManager.otherCards)
-                }
-                else {
-                    leftCardsView.otherPlayer()
-                }
-                if pokerManager.comIndex == rightCardsView.tag {
-                    rightCardsView.setHandCards(pokerManager.otherCards)
-                }
-                else {
-                    rightCardsView.otherPlayer()
-                }
-                
                 updateTitleView()
                 updateScoreView()
                 updateTurnView(-1)
@@ -307,6 +296,18 @@ class PlayView: UIView, StateManagerPlayDelegate {
     }
     
     // MARK: - Functions
+    func findUIIndexFunc(_ playIndex:Int) -> Int {
+        let myTurnIndex = stateManager.playInfo.turnIndex
+        var findUIindex = 0
+        for i in 1..<4 {
+            if (myTurnIndex+i)%4 == playIndex {
+                findUIindex = i;
+                break
+            }
+        }
+        return findUIindex
+    }
+    
     func updateTitleView() {
         trumpNumber.text = String(format:"%d",pokerManager.trump/7+1)
         trumpType.image = UIImage(named: PlayView.TrumpType[pokerManager.trump%7])
@@ -363,10 +364,10 @@ class PlayView: UIView, StateManagerPlayDelegate {
     func updatePlayingUI(_ poker: Int, _ type: Int, _ lastUser: Int) {
         
         let myTurnIndex = stateManager.playInfo.turnIndex
-        cardsView.checkCardsPlay()
+        playerCardsView[0].checkCardsPlay()
         
         if pokerManager.twoCardsPlay() {
-            topCardsView.checkCardsPlay()
+            playerCardsView[2].checkCardsPlay()
         }
         
         var k = myTurnIndex
@@ -382,34 +383,21 @@ class PlayView: UIView, StateManagerPlayDelegate {
         }
         
         if lastUser != myTurnIndex && poker != 0 {
-            if (myTurnIndex+1)%4 == lastUser {
-                if pokerManager.comIndex == leftCardsView.tag {
-                    leftCardsView.setCardHidden(poker)
-                }
-                else {
-                    leftCardsView.playingCard()
-                }
-            }
-            else if (myTurnIndex+2)%4 == lastUser {
-                if !pokerManager.twoCardsPlay() {
-                    topCardsView.playingCard()
-                }
+            let findUIindex = findUIIndexFunc(lastUser)
+            
+            if playerCardsView[findUIindex].otherPlayerFlag {
+                playerCardsView[findUIindex].playingCard()
             }
             else {
-                if pokerManager.comIndex == rightCardsView.tag {
-                    rightCardsView.setCardHidden(poker)
-                }
-                else {
-                    rightCardsView.playingCard()
-                }
+                playerCardsView[findUIindex].setCardHidden(poker)
             }
         }
         
         updateTurnView(type)
         
         if poker == 0 {
-            cardsView.checkCardsPlay()
-            topCardsView.checkCardsPlay()
+            playerCardsView[0].checkCardsPlay()
+            playerCardsView[2].checkCardsPlay()
             if (lastUser==myTurnIndex||lastUser==(myTurnIndex+2)%4) {
                 pokerManager.enemyScroe += 1
             }
@@ -423,6 +411,42 @@ class PlayView: UIView, StateManagerPlayDelegate {
                 stateManager.interruptConnect()
                 finishView.isHidden = false
                 finishView.setInfo(pokerManager.ourScroe < pokerManager.winNumber)
+            }
+        }
+    }
+    func recoverPlayingUI() {
+        let myTurnIndex = stateManager.playInfo.turnIndex
+        
+        if pokerManager.boutsWinRecord.count != 0 {
+            for _ in 0..<pokerManager.boutsWinRecord.count {
+                for j in 0..<4 {
+                    let index = (myTurnIndex+j)%4
+                    if index != myTurnIndex {
+                        let findUIindex = findUIIndexFunc(index)
+                        if playerCardsView[findUIindex].otherPlayerFlag {
+                            playerCardsView[findUIindex].playingCard()
+                        }
+                    }
+                }
+            }
+        }
+        
+        for i in 0..<4 {
+            let index = (myTurnIndex+i)%4
+            var poker = -1
+            if  pokerManager.playsRecord[index].count == (pokerManager.boutsWinRecord.count+1) {
+                poker = pokerManager.playsRecord[index][pokerManager.boutsWinRecord.count]
+                
+                let findUIindex = findUIIndexFunc(index)
+                if playerCardsView[findUIindex].otherPlayerFlag {
+                    playerCardsView[findUIindex].playingCard()
+                }
+            }
+            tablePokers[i].setCard(poker)
+
+            playerCardsView[i].recoverCard()
+            if i%2 == 0 {
+                playerCardsView[i].checkCardsPlay()
             }
         }
     }

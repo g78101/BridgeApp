@@ -12,6 +12,7 @@ class CardsView: UIView, CardViewDelegate {
     // MARK: - UI Member
     var cards:[CardView] = [CardView]()
     var cardsArray:[Int] = Array<Int>()
+    var otherPlayerFlag = true
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -59,6 +60,9 @@ class CardsView: UIView, CardViewDelegate {
             cardsArray.append(Int(cardsText[i])!)
             cards[i].setCard(cardsArray[i])
         }
+        if !cardsText.contains("0") {
+            otherPlayerFlag = false
+        }
     }
     
     func setEnable(_ isEnable:Bool) {
@@ -86,13 +90,31 @@ class CardsView: UIView, CardViewDelegate {
         for cardView in cards {
             cardView.isHidden = false
         }
-        
+        setHandCards(["0","0","0","0","0","0","0","0","0","0","0","0","0"])
+        setEnable(false)
+        otherPlayerFlag = true
         for constraint in constraints {
             if constraint.firstItem?.classForCoder == CardView.classForCoder() &&
                 constraint.firstAttribute == .left &&
                 constraint.secondAttribute == .right {
                 constraint.constant = 2
             }
+        }
+    }
+    
+    func recoverCard() {
+        if otherPlayerFlag {
+            return
+        }
+        
+        let pokerManager = PokerManager.getInstance()
+        
+        for i in 0..<pokerManager.playsRecord[self.tag].count {
+            let poker = pokerManager.playsRecord[self.tag][i]
+            let index = cardsArray.index(of: poker)!
+            cardsArray[index] = 0
+            cards[index].isHidden = true
+            setEnable(false)
         }
     }
     
