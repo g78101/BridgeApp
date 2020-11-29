@@ -81,7 +81,7 @@
 <script type="text/javascript">
   if ("WebSocket" in window){
     console.log("您的瀏覽器支援 WebSocket!");
-    var ws = new WebSocket("ws://talkaying.ga:3344");
+    var ws = new WebSocket("ws://127.0.0.1:3344");
       ws.onopen = function(){
       console.log("websocket 已連線上");
     }
@@ -89,6 +89,13 @@
     ws.onmessage = function (evt) {
       var dataReceive = evt.data;
       //console.log("資料已接收..."+dataReceive);
+
+      if( dataReceive == "0") { 
+          document.getElementById('Empty').hidden=false
+          document.getElementById('Main').hidden=true
+          return
+      }
+
       var datas = dataReceive.split('^');
       var trump = datas[0];
       var info = datas[1].split('|');
