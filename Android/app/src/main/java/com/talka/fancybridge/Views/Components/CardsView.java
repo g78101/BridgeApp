@@ -17,6 +17,7 @@ public class CardsView extends ConstraintLayout implements CardView.CardViewList
 
     public List<CardView> cards = new ArrayList<CardView>();
     public List<Integer> cardsArray = new ArrayList<Integer>();
+    public Boolean otherPlayerFlag = true;
 
     public CardsView(Context context) {
         super(context);
@@ -63,6 +64,10 @@ public class CardsView extends ConstraintLayout implements CardView.CardViewList
             cardsArray.add(Integer.parseInt(cardsText[i]));
             cards.get(i).setCard(Integer.parseInt(cardsText[i]));
         }
+
+        if(!cardsText[0].equals("0")) {
+            otherPlayerFlag = false;
+        }
     }
 
     public void setSmallFont() {
@@ -96,8 +101,28 @@ public class CardsView extends ConstraintLayout implements CardView.CardViewList
         for(CardView card : cards) {
             card.setVisibility(View.VISIBLE);
         }
+        otherPlayerFlag = true;
+        String [] otherCards = {"0","0","0","0","0","0","0","0","0","0","0","0","0"};
+        setHandCards(otherCards);
+        setEnable(false);
     }
 
+    public void recoverCard() {
+        if(otherPlayerFlag) {
+            return;
+        }
+
+        PokerManager pokerManager = PokerManager.getInstance();
+
+        int indexTag = (int)getTag();
+        for(int i=0;i<pokerManager.playsRecord.get(indexTag).size();++i) {
+            Integer poker = pokerManager.playsRecord.get(indexTag).get(i);
+            int index = cardsArray.indexOf(poker);
+            cardsArray.set(index,0);
+            cards.get(index).setVisibility(INVISIBLE);
+            setEnable(false);
+        }
+    }
 
     public void checkCardsPlay() {
         PokerManager pokerManager = PokerManager.getInstance();

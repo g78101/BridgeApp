@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements StateManager.Stat
     public void changeStateUI(StateManager.GameState state) {
 
         switch (state) {
+            case Connected:
+                break;
             case Wait:
                 mWaitView.clear();
                 mWaitView.setVisibility(View.VISIBLE);
@@ -69,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements StateManager.Stat
                 mPlayView.setVisibility(View.INVISIBLE);
                 break;
             case Call:
+                mWaitView.setVisibility(View.INVISIBLE);
+                mCallView.setVisibility(View.VISIBLE);
+                mPlayView.setVisibility(View.INVISIBLE);
+                break;
+            case CallChoosePartner:
                 mWaitView.setVisibility(View.INVISIBLE);
                 mCallView.setVisibility(View.VISIBLE);
                 mPlayView.setVisibility(View.INVISIBLE);

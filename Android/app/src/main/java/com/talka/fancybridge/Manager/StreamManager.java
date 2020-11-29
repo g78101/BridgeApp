@@ -1,7 +1,6 @@
 package com.talka.fancybridge.Manager;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,10 +23,12 @@ public class StreamManager {
 
     public interface StreamManagerListener {
         public void getData(String data);
+        public void connectInterrupt();
     }
 
-    // private static String ServerURL = "talkaying.ga";
-    private static String ServerURL = "localhost";
+     private static String ServerURL = "talkaying.ga";
+//    private static String ServerURL = "localhost";
+//    private static String ServerURL = "192.168.1.26";
     private static int ServerPort = 8888;
 
     private Thread thread;
@@ -37,17 +38,12 @@ public class StreamManager {
     private String tmp;
 
     public StreamManagerListener listener;
-    public Context context;
 
     public static synchronized StreamManager getInstance() {
         if (instance == null) {
             instance = new StreamManager();
         }
         return instance;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     public void connect() {
@@ -91,7 +87,12 @@ public class StreamManager {
                             @Override
                             public void run() {
                                 if (listener != null) {
-                                    listener.getData(tmp);
+                                    if(!tmp.equals("")) {
+                                        listener.getData(tmp);
+                                    }
+                                    else  {
+                                        listener.connectInterrupt();
+                                    }
                                 }
                                 latch.countDown();
                             }
@@ -115,9 +116,9 @@ public class StreamManager {
                     Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                            AlertDialog.Builder alert = new AlertDialog.Builder(StateManager.getInstance().context);
                             alert.setTitle("Server Error");
-                            alert.setMessage("Something is wrong");
+                            alert.setMessage("Something is wrong, Pleases restart App.");
                             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {

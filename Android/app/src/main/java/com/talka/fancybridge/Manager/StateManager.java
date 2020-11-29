@@ -1,10 +1,17 @@
 package com.talka.fancybridge.Manager;
 
+import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
 import com.talka.fancybridge.Views.AlertView;
 import com.talka.fancybridge.Views.Components.CardView;
+import com.talka.fancybridge.Views.LoadingView;
 
+import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
 
 public class StateManager implements StreamManager.StreamManagerListener {
@@ -12,9 +19,27 @@ public class StateManager implements StreamManager.StreamManagerListener {
     static StateManager instance = null;
 
     public enum GameState {
+        Connected,
         Wait,
         Call,
-        Play
+        CallChoosePartner,
+        Play;
+
+        public static GameState fromInteger(int x) {
+            switch(x) {
+                case -1:
+                    return Connected;
+                case 0:
+                    return Wait;
+                case 1:
+                    return Call;
+                case 2:
+                    return CallChoosePartner;
+                case 3:
+                    return Play;
+            }
+            return null;
+        }
     }
 
     enum ConnectState {
@@ -25,7 +50,9 @@ public class StateManager implements StreamManager.StreamManagerListener {
         N("Names"),
         H("Hand"),
         C("Call"),
-        P("Play");
+        P("Play"),
+        D("Disconnect"),
+        R("Recover");
 
         private final String context;
 
@@ -39,6 +66,33 @@ public class StateManager implements StreamManager.StreamManagerListener {
         @Override
         public String toString() {
             return context;
+        }
+    }
+
+    enum RecoverState {
+        cards,
+        names,
+        callRecord,
+        playRecord,
+        boutsWin,
+        done;
+
+        public static RecoverState fromInteger(int x) {
+            switch(x) {
+                case 1:
+                    return cards;
+                case 2:
+                    return names;
+                case 3:
+                    return callRecord;
+                case 4:
+                    return playRecord;
+                case 5:
+                    return boutsWin;
+                case 6:
+                    return done;
+            }
+            return null;
         }
     }
 
@@ -72,8 +126,10 @@ public class StateManager implements StreamManager.StreamManagerListener {
 
     public interface StateManagerPlayListener {
         void updatePlayingUI(int poker, int type, int lastUser);
+        void recoverPlayingUI();
     }
 
+    public Context context;
     public StateManagerListener listener;
     public StateManagerCallListener callListener;
     public StateManagerPlayListener playListener;
@@ -97,7 +153,7 @@ public class StateManager implements StreamManager.StreamManagerListener {
     }
 
     public void setContext(Context context) {
-        streamManager.setContext(context);
+        this.context=context;
     }
 
     //MARK: - Functions
@@ -144,34 +200,45 @@ public class StateManager implements StreamManager.StreamManagerListener {
         switch (connectState) {
             case S: {
                 String[] splitArray = info.split(",");
+                GameState tempState = GameState.fromInteger(Integer.parseInt(splitArray[0]));
+                gameState = tempState;
 
-                if (splitArray[0].equals("0")) {
-
-                    playInfo.turnIndex = Integer.parseInt(splitArray[1]);
-                    streamManager.sendMessage("N" + playInfo.name);
-                    gameState = GameState.Wait;
-                } else if (splitArray[0].equals("1")) {
-                    int threeModeInt = Integer.parseInt(splitArray[2]);
-                    pokerManager.turnIndex = Integer.parseInt(splitArray[1]);
-                    pokerManager.threeMode = (threeModeInt == 1 ? true : false);
-                    gameState = GameState.Call;
-                } else if (splitArray[0].equals("2")) {
-
-                    int lastUser = Integer.parseInt(splitArray[3]);
-                    pokerManager.trump = Integer.parseInt(splitArray[1]);
-                    pokerManager.turnIndex = Integer.parseInt(splitArray[2]);
-                    pokerManager.callsRecord.get(lastUser).add(-1);
-
-                    if (pokerManager.threeMode) {
-                        lastUser = 1;
+                switch (gameState) {
+                    case Connected: {
+//                        TelephonyManager tm = (TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE);
+                        String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                        streamManager.sendMessage(String.format("N%s,A-%s",playInfo.name,deviceId));
+                        break;
                     }
-
-                    if (lastUser == playInfo.turnIndex || lastUser == (playInfo.turnIndex + 2) % 4) {
-                        pokerManager.winNumber = PokerManager.totalSum - (pokerManager.trump / 7 + 7);
-                    } else {
-                        pokerManager.winNumber = (pokerManager.trump / 7 + 7);
+                    case Wait: {
+                        playInfo.turnIndex = Integer.parseInt(splitArray[1]);
+                        break;
                     }
-                    gameState = GameState.Play;
+                    case Call: {
+                        int threeModeInt = Integer.parseInt(splitArray[2]);
+                        pokerManager.turnIndex = Integer.parseInt(splitArray[1]);
+                        pokerManager.threeMode = (threeModeInt == 1 ? true : false);
+                        break;
+                    }
+                    case CallChoosePartner:
+                        break;
+                    case Play: {
+                        int lastUser = Integer.parseInt(splitArray[3]);
+                        pokerManager.trump = Integer.parseInt(splitArray[1]);
+                        pokerManager.turnIndex = Integer.parseInt(splitArray[2]);
+                        pokerManager.callsRecord.get(lastUser).add(-1);
+
+                        if (pokerManager.threeMode) {
+                            lastUser = 1;
+                        }
+
+                        if (lastUser == playInfo.turnIndex || lastUser == (playInfo.turnIndex + 2) % 4) {
+                            pokerManager.winNumber = PokerManager.totalSum - (pokerManager.trump / 7 + 7);
+                        } else {
+                            pokerManager.winNumber = (pokerManager.trump / 7 + 7);
+                        }
+                        break;
+                    }
                 }
 
                 if (listener != null) {
@@ -198,6 +265,8 @@ public class StateManager implements StreamManager.StreamManagerListener {
             }
             case T: {
                 int calledIndex = Integer.parseInt(info);
+                gameState = GameState.CallChoosePartner;
+                pokerManager.turnIndex = calledIndex;
                 if (callListener != null) {
                     callListener.showThreeModeUI(calledIndex);
                 }
@@ -213,7 +282,7 @@ public class StateManager implements StreamManager.StreamManagerListener {
                     for(int i=0;i<4;++i) {
                         if( threeModePlayers[i].equals(playInfo.name) ) {
                             playInfo.turnIndex = i;
-                            AlertView.showViewSetText(streamManager.context,String.format("You are player %d",i+1));
+                            AlertView.showViewSetText(context,String.format("You are player %d",i+1));
                         }
 
                         if ( threeModePlayers[i].equals("-")) {
@@ -240,7 +309,7 @@ public class StateManager implements StreamManager.StreamManagerListener {
 
                 pokerManager.turnIndex = nowTurn;
                 if( playInfo.turnIndex == nowTurn) {
-                    AlertView.showViewSetText(streamManager.context,"Your Turn");
+                    AlertView.showViewSetText(context,"Your Turn");
                 }
                 pokerManager.callsRecord.get(lastTurn).add(trump);
 
@@ -316,7 +385,234 @@ public class StateManager implements StreamManager.StreamManagerListener {
 
                 break;
             }
+            case D: {
+                if(StateManager.getInstance().isGameOver) {
+                    return;
+                }
+
+                if(info.equals("0")) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    alert.setTitle("Server Message");
+                    alert.setMessage("Someone Disconnect");
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    alert.show();
+                    LoadingView.start(context);
+                }
+                else if(info.equals("1")) {
+                    if((gameState == GameState.CallChoosePartner && pokerManager.turnIndex == playInfo.turnIndex)
+                            || gameState != GameState.CallChoosePartner) {
+                        LoadingView.stop(context);
+                    }
+                }
+                else {
+                    closeConnectAlert("close connect");
+                }
+
+                break;
+            }
+            case R: {
+                String stateStr = info.substring(0, 1);
+                RecoverState recoverState = RecoverState.fromInteger(Integer.parseInt(stateStr));
+                String recoverInfo = info.substring(2);
+
+                switch (recoverState) {
+                    case cards: {
+                        String[] splitArray = recoverInfo.split("\\^");
+                        String cardsStr = splitArray[0];
+                        pokerManager.setCards(cardsStr.split(","));
+                        if(splitArray.length > 1) {
+                            String otherCardsStr = splitArray[1];
+                            pokerManager.setOtherCards(otherCardsStr.split(","));
+                            pokerManager.threeMode = true;
+                        }
+                        break;
+                    }
+                    case names: {
+                        String[] splitArray = recoverInfo.split("\\^");
+                        int turnIndex = Integer.parseInt(splitArray[0]);
+                        String namesStr = splitArray[1];
+
+                        players = namesStr.split(",");
+                        playInfo.name = players[turnIndex];
+                        playInfo.turnIndex = turnIndex;
+                        if(splitArray.length > 2) {
+                            String threeNamesStr = splitArray[2];
+                            threeModePlayers = threeNamesStr.split(",");
+
+                            for(int i=0;i<4;++i) {
+                                if(threeModePlayers[i].equals(playInfo.name)) {
+                                    playInfo.turnIndex = i;
+                                    AlertView.showViewSetText(context,String.format("You are player %d",i+1));
+                                }
+
+                                if ( threeModePlayers[i].equals("-")) {
+                                    pokerManager.comIndex = i;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case callRecord: {
+                        String[] splitArray = recoverInfo.split("\\|");
+
+                        for(int i=0;i<splitArray.length;++i) {
+                            String player = splitArray[i];
+                            if(player.equals("")) {
+                                continue;
+                            }
+                            String[] records = player.split("\\^");
+                            for(String card : records) {
+                                if(!card.equals("")) {
+                                    pokerManager.callsRecord.get(i).add(Integer.parseInt(card));
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case playRecord: {
+                        String[] splitArray = recoverInfo.split("\\|");
+
+                        for(int i=0;i<splitArray.length;++i) {
+                            String player = splitArray[i];
+                            if(player.equals("")) {
+                                continue;
+                            }
+                            String[] records = player.split("\\^");
+                            for(String card : records) {
+                                if(!card.equals("")) {
+                                    int poker = Integer.parseInt(card);
+                                    int flower = (poker-1)/13;
+                                    pokerManager.playsRecord.get(i).add(poker);
+                                    pokerManager.flowerCountRecord[flower]+=1;
+                                 }
+                            }
+                        }
+                        break;
+                    }
+                    case boutsWin: {
+                        String[] splitArray = recoverInfo.split("\\|");
+                        int lastWinIndex = -1;
+                        for (String bounts : splitArray) {
+                            if (!bounts.equals("")) {
+                                int winIndex = Integer.parseInt(bounts);
+                                lastWinIndex = winIndex;
+                                pokerManager.boutsWinRecord.add(winIndex);
+                                if (winIndex == playInfo.turnIndex ||
+                                        winIndex == (playInfo.turnIndex + 2) % 4) {
+                                    pokerManager.ourScroe += 1;
+                                } else {
+                                    pokerManager.enemyScroe += 1;
+                                }
+                            }
+                        }
+                        if (lastWinIndex != -1 && pokerManager.boutsWinRecord.size() < pokerManager.playsRecord.get(lastWinIndex).size()) {
+                            int playRecordWinSize = pokerManager.playsRecord.get(lastWinIndex).size();
+                            pokerManager.currentFlower = ((pokerManager.playsRecord.get(lastWinIndex).get(playRecordWinSize - 1)));
+                        }
+                        break;
+                    }
+                    case done: {
+                        String[] splitArray = recoverInfo.split("\\^");
+                        GameState tempState = GameState.fromInteger(Integer.parseInt(splitArray[0]));
+                        gameState = tempState;
+                        pokerManager.turnIndex = Integer.parseInt(splitArray[1]);
+                        pokerManager.trump = Integer.parseInt(splitArray[2]);
+                        int callLast = Integer.parseInt(splitArray[3]);
+
+                        if(pokerManager.turnIndex == -1 && playInfo.turnIndex == 0) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        sleep(1000);
+                                        streamManager.sendMessage("P-1,0");
+                                    } catch (InterruptedException e) {
+//                                        Log.d("error");
+                                    }
+                                }
+                            }).start();
+                        }
+
+                        if (!pokerManager.threeMode) {
+                            if (callLast == playInfo.turnIndex || callLast == (playInfo.turnIndex + 2) % 4) {
+                                pokerManager.winNumber = PokerManager.totalSum - (pokerManager.trump / 7 + 7);
+                            } else {
+                                pokerManager.winNumber = (pokerManager.trump / 7 + 7);
+                            }
+                        }
+                        else {
+                            if ( playInfo.turnIndex==0 || playInfo.turnIndex==2) {
+                                pokerManager.winNumber = (pokerManager.trump / 7 + 7);
+                            }
+                            else {
+                                pokerManager.winNumber = PokerManager.totalSum - (pokerManager.trump / 7 + 7);
+                            }
+                        }
+
+                        if (listener != null) {
+                            listener.changeStateUI(gameState);
+                        }
+
+                        if(gameState == GameState.Call) {
+                            if(callListener != null) {
+                                callListener.updateCallingUI(pokerManager.trump);
+                            }
+                        }
+                        else if (gameState == GameState.CallChoosePartner) {
+                            if(callListener != null) {
+                                callListener.showThreeModeUI(pokerManager.turnIndex);
+                            }
+                        }
+                        else if (gameState == GameState.Play) {
+                            if(playListener != null) {
+                                playListener.recoverPlayingUI();
+                            }
+                        }
+
+                        break;
+                    }
+                }
+                break;
+            }
         }
+    }
+
+    @Override
+    public void connectInterrupt() {
+        if(StateManager.getInstance().isGameOver) {
+            return;
+        }
+
+        if(gameState == GameState.Connected || gameState == GameState.Wait) {
+            closeConnectAlert("Someone Leave");
+        }
+        else {
+            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+            alert.setTitle("Server Message");
+            alert.setMessage("Someone Disconnect");
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    exit(1); }});
+            alert.show();
+        }
+    }
+
+    public void closeConnectAlert(String message) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setTitle("Server Message");
+        alert.setMessage(message);
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                exit(1);
+            }
+        });
+        alert.show();
     }
 
 }

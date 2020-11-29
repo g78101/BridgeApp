@@ -148,6 +148,7 @@ public class CallView extends ConstraintLayout implements PokerManager.PokerMana
             callButtonsView.setVisibility(INVISIBLE);
         }
         else {
+            callButtonsView.setAlpha(0.5f);
             LoadingView.start(getContext());
         }
     }

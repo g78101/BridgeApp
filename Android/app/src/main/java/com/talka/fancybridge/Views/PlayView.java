@@ -34,10 +34,7 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
     static String TeamInfoText = "  Our Team %d/%d\nEnemy Team %d/%d";
     static Float[] TunrArray = {0.0f, 90.0f, 180.0f, 270.0f};
 
-    private CardsView cardsView;
-    private CardsView rightCardsView;
-    private CardsView leftCardsView;
-    private CardsView topCardsView;
+    private List<CardsView> playerCardsView = new ArrayList<CardsView>();
     private ImageView turnView;
     private List<CardView> tablePokers = new ArrayList<CardView>();
     private List<TextView> tableIndex = new ArrayList<TextView>();
@@ -72,10 +69,10 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
         LayoutInflater inflate = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflate.inflate(R.layout.play_view, this, true);
 
-        cardsView = (CardsView) findViewById(R.id.playcards);
-        rightCardsView = (CardsView) findViewById(R.id.rightCards);
-        leftCardsView = (CardsView) findViewById(R.id.leftCards);
-        topCardsView = (CardsView) findViewById(R.id.topCards);
+        playerCardsView.add((CardsView) findViewById(R.id.playerCardsView0));
+        playerCardsView.add((CardsView) findViewById(R.id.playerCardsView1));
+        playerCardsView.add((CardsView) findViewById(R.id.playerCardsView2));
+        playerCardsView.add((CardsView) findViewById(R.id.playerCardsView3));
         history = (ImageButton) findViewById(R.id.historyBtn);
         trumpText = (TextView) findViewById(R.id.trumpText);
         trumpType = (ImageView) findViewById(R.id.trumpType);
@@ -103,17 +100,14 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
         pokerManager = PokerManager.getInstance();
         stateManager = StateManager.getInstance();
         stateManager.playListener = this;
-        cardsView.setEnable(false);
-        rightCardsView.otherPlayer();
-        rightCardsView.setEnable(false);
-        leftCardsView.otherPlayer();
-        leftCardsView.setEnable(false);
-        topCardsView.otherPlayer();
-        topCardsView.setEnable(false);
 
-        leftCardsView.setSmallFont();
-        topCardsView.setSmallFont();
-        rightCardsView.setSmallFont();
+        playerCardsView.get(1).otherPlayer();
+        playerCardsView.get(3).otherPlayer();
+        for(int i=1;i<4;++i) {
+            playerCardsView.get(i).setSmallFont();
+            playerCardsView.get(i).setEnable(false);
+        }
+        playerCardsView.get(0).setEnable(false);
 
         finishView.setInfo(false);
 
@@ -128,44 +122,41 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
         LoadingView.stop(getContext());
 
         if (visibility == View.VISIBLE) {
-            cardsView.setHandCards(pokerManager.cards);
-            cardsView.setTag(stateManager.playInfo.turnIndex);
-            leftCardsView.setTag((stateManager.playInfo.turnIndex+1)%4);
-            topCardsView.setTag((stateManager.playInfo.turnIndex+2)%4);
-            rightCardsView.setTag((stateManager.playInfo.turnIndex+3)%4);
+            for(int i=0;i<4;++i) {
+                playerCardsView.get(i).resetCard();
+                playerCardsView.get(i).setTag((stateManager.playInfo.turnIndex+i)%4);
+            }
 
-            cardsView.resetCard();
-            leftCardsView.resetCard();
-            topCardsView.resetCard();
-            rightCardsView.resetCard();
-
-            // Three Mode
-            if(pokerManager.threeMode && pokerManager.twoCardsPlay()) {
-                topCardsView.setHandCards(pokerManager.otherCards);
-                topCardsView.setScaleX(0.8f);
-                topCardsView.setScaleY(0.8f);
-                topCardsView.setRotation(0.f);
+            if(pokerManager.threeMode) {
+                if(pokerManager.twoCardsPlay()) {
+                    playerCardsView.get(2).setHandCards(pokerManager.otherCards);
+                    playerCardsView.get(2).setScaleX(0.8f);
+                    playerCardsView.get(2).setScaleY(0.8f);
+                    playerCardsView.get(2).setRotation(0.f);
+                    playerCardsView.get(2).checkCardsPlay();
+                }
+                else {
+                    int findUIindex = findUIIndexFunc(pokerManager.comIndex);
+                    playerCardsView.get(findUIindex).setHandCards(pokerManager.otherCards);
+                    playerCardsView.get(2).otherPlayer();
+                    playerCardsView.get(2).setScaleX(0.5f);
+                    playerCardsView.get(2).setScaleY(0.5f);
+                    playerCardsView.get(2).setRotation(180.f);
+                }
             }
             else {
-                topCardsView.otherPlayer();
-                topCardsView.setScaleX(0.5f);
-                topCardsView.setScaleY(0.5f);
-                topCardsView.setRotation(180.f);
+                for(int i=1;i<4;++i) {
+                    playerCardsView.get(i).otherPlayer();
+                    if(i==2) {
+                        playerCardsView.get(2).setScaleX(0.5f);
+                        playerCardsView.get(2).setScaleY(0.5f);
+                        playerCardsView.get(2).setRotation(180.f);
+                    }
+                }
             }
 
-            cardsView.checkCardsPlay();
-            topCardsView.checkCardsPlay();
-
-            if(pokerManager.comIndex == (int)leftCardsView.getTag()) {
-                leftCardsView.setHandCards(pokerManager.otherCards);
-            } else {
-                leftCardsView.otherPlayer();
-            }
-            if (pokerManager.comIndex == (int)rightCardsView.getTag()) {
-                rightCardsView.setHandCards(pokerManager.otherCards);
-            } else {
-                rightCardsView.otherPlayer();
-            }
+            playerCardsView.get(0).setHandCards(pokerManager.cards);
+            playerCardsView.get(0).checkCardsPlay();
 
             updateTitleView();
             updateScoreView();
@@ -177,6 +168,18 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
                 k=(k+1)%4;
             }
         }
+    }
+
+    int findUIIndexFunc(int playIndex) {
+        int myTurnIndex = stateManager.playInfo.turnIndex;
+        int findUIindex = 0;
+        for(int i=1;i<4;++i) {
+            if((myTurnIndex+i)%4 == playIndex) {
+                findUIindex = i;
+                break;
+            }
+        }
+        return findUIindex;
     }
 
     void updateTitleView() {
@@ -239,10 +242,10 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
     public void updatePlayingUI(int poker, int type, int lastUser) {
 
         int myTurnIndex = stateManager.playInfo.turnIndex;
-        cardsView.checkCardsPlay();
+        playerCardsView.get(0).checkCardsPlay();
 
         if(pokerManager.twoCardsPlay()) {
-            topCardsView.checkCardsPlay();
+            playerCardsView.get(2).checkCardsPlay();
         }
 
         int k = myTurnIndex;
@@ -257,32 +260,21 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
         }
 
         if (lastUser != myTurnIndex && poker != 0) {
-            if ((myTurnIndex + 1) % 4 == lastUser) {
-                if(pokerManager.comIndex == (int)leftCardsView.getTag()) {
-                    leftCardsView.setCardHidden(poker);
-                }
-                else {
-                    leftCardsView.playingCard();
-                }
-            } else if ((myTurnIndex + 2) % 4 == lastUser) {
-                if(!pokerManager.twoCardsPlay()) {
-                    topCardsView.playingCard();
-                }
-            } else {
-                if(pokerManager.comIndex == (int)rightCardsView.getTag()) {
-                    rightCardsView.setCardHidden(poker);
-                }
-                else {
-                    rightCardsView.playingCard();
-                }
+            int findUIindex = findUIIndexFunc(lastUser);
+
+            if(playerCardsView.get(findUIindex).otherPlayerFlag){
+                playerCardsView.get(findUIindex).playingCard();
+            }
+            else {
+                playerCardsView.get(findUIindex).setCardHidden(poker);
             }
         }
 
         updateTurnView(type);
 
         if (poker == 0) {
-            cardsView.checkCardsPlay();
-            topCardsView.checkCardsPlay();
+            playerCardsView.get(0).checkCardsPlay();
+            playerCardsView.get(2).checkCardsPlay();
 
             if (lastUser == myTurnIndex || lastUser == (myTurnIndex + 2) % 4) {
                 pokerManager.enemyScroe += 1;
@@ -296,6 +288,44 @@ public class PlayView extends ConstraintLayout implements StateManager.StateMana
                 stateManager.interruptConnect();
                 finishView.setVisibility(VISIBLE);
                 finishView.setInfo(pokerManager.ourScroe < pokerManager.winNumber);
+            }
+        }
+    }
+
+    @Override
+    public void recoverPlayingUI() {
+        int myTurnIndex = stateManager.playInfo.turnIndex;
+
+        if(pokerManager.boutsWinRecord.size() != 0) {
+            for(int i=0;i<pokerManager.boutsWinRecord.size();++i) {
+                for(int j=0;j<4;++j) {
+                    int index = (myTurnIndex+j)%4;
+                    if(index != myTurnIndex) {
+                        int findUIindex = findUIIndexFunc(index);
+                        if(playerCardsView.get(findUIindex).otherPlayerFlag) {
+                            playerCardsView.get(findUIindex).playingCard();
+                        }
+                    }
+                }
+            }
+        }
+
+        for(int i=0;i<4;++i) {
+            int index =(myTurnIndex+i)%4;
+            int poker = -1;
+            if(pokerManager.playsRecord.get(index).size() == (pokerManager.boutsWinRecord.size()+1)) {
+                poker = pokerManager.playsRecord.get(index).get(pokerManager.boutsWinRecord.size());
+
+                int findUIindex = findUIIndexFunc(index);
+                if(playerCardsView.get(findUIindex).otherPlayerFlag) {
+                    playerCardsView.get(findUIindex).playingCard();
+                }
+            }
+            tablePokers.get(i).setCard(poker);
+
+            playerCardsView.get(i).recoverCard();
+            if(i%2==0) {
+                playerCardsView.get(i).checkCardsPlay();
             }
         }
     }
