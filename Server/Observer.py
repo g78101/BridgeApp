@@ -11,24 +11,39 @@ import pytz, datetime
 class WebSocket:
     def __init__(self):
         self.server = None
+        self.rooms = None
 
     # Called for every client connecting (after handshake)
     def new_client(self,client, server):
-        #print("New client connected and was given id %d" % client['id'])
-        # str = "123"
-        # server.send_message(client,str)
+        print("New client connected and was given id %d" % client['id'])
+
+        if self.rooms == None or len(self.rooms) == 0:
+            server.send_message(client,"0")
+        else:
+            messageStr = self.getUpdateInfo(self.rooms[0])
+            server.send_message(client,messageStr)
         pass
 
     # Called for every client disconnecting
     def client_left(self,client, server):
-        #print("Client(%d) disconnected" % client['id'])
+        # print("Client(%d) disconnected" % client['id'])
+        print("Client disconnected")
         pass
+
+    # Called when a client sends a message
+    def message_received(self,client, server, message):
+        if len(message) > 200:
+            message = message[:200]+'..'
+        print("Client(%d) said: %s" % (client['id'], message))
+        print client
+        # server.send_message(client,"Test")
 
     def start(self):
         port=3344
         self.server = WebsocketServer(port,host='0.0.0.0')
         self.server.set_fn_new_client(self.new_client)
         self.server.set_fn_client_left(self.client_left)
+        self.server.set_fn_message_received(self.message_received)
         server_thread = threading.Thread(target=self.server.run_forever)
         server_thread.start()
 
@@ -36,6 +51,7 @@ class WebSocket:
         self.server.server_close()
 
     def updateContent(self,Rooms,roomIndex):
+        self.rooms=Rooms
         messageStr = self.getUpdateInfo(Rooms[roomIndex])
         self.server.send_message_to_all(messageStr)
 

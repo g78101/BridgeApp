@@ -77,7 +77,6 @@ class PokerRoom:
 		recoverBoutsWin = "R5^%s"%(self.boutsWinRecord[:-1])
 
 		recoverStatus="R6^%s^%s^%s^%s"%(self.state.value,self.nextuser,self.bridge.trump,self.callLast)
-		
 		recoverList.append(recoveryCard)
 		recoverList.append(recoveryName)
 		recoverList.append(recoverCall)
@@ -193,8 +192,9 @@ class PokerRoom:
 				self.nextuser=self.threeModeIndex[0]
 			else:
 				self.callLast = lastUser
+				self.nextuser = (self.trump_type_who_call_fast[self.bridge.trump%7]+1)%4
 				self.state = Type.RoomState.play
-				returnStr = "S%d,%d,%d,%d"%(self.state.value,self.bridge.trump,(self.trump_type_who_call_fast[self.bridge.trump%7]+1)%4,self.callLast)
+				returnStr = "S%d,%d,%d,%d"%(self.state.value,self.bridge.trump,self.nextuser,self.callLast)
 				self.updateAttackDefenseInfo(self.bridge.trump,self.callLast)
 			self.bridge.bout = 0
 		else:
@@ -264,7 +264,6 @@ class PokerRoom:
 
 		if roundFinish:
 			self.nextuser = -1
-
 		return returnStr
 
 	def updateAttackDefenseInfo(self,trump,lastUser):
