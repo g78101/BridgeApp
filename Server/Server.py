@@ -111,6 +111,8 @@ if __name__ == "__main__":
                     
                     # print("data:"+data)
                     if data:
+                        if observer.debugMode:
+                            print "data: "+data
                         connectState = data[0:1]
                         info = data[1:]
 
@@ -127,6 +129,9 @@ if __name__ == "__main__":
                                     recoverList = interruptRoom.recoverRoom(foundIndex,sock)
                                     for recoverInfo in recoverList:
                                         sock.send(sendData(recoverInfo))
+                                        if observer.debugMode:
+                                            userIndex = room.findSocketIndex(sock)
+                                            print "Room-%d %d recoverInfo: %s"%(index, foundIndex,recoverInfo)
                                     reconnect = True
                                     sendDataToRoom(room,sendData("D1"))
                                     break
@@ -144,6 +149,8 @@ if __name__ == "__main__":
                                         Rooms.append(room)
                                         if newPlayerEnterRoom(room,sock,name,uuid):
                                             observer.updateContent(Rooms,Rooms.index(room))
+                                        if observer.debugMode:
+                                            print "Create Another New Room-%d for %s"%(Rooms.index(room), name)
                                     else:
                                         sock.send("is Full")
                                         CONNECTION_LIST.remove(sock)
@@ -172,6 +179,9 @@ if __name__ == "__main__":
                             sendStr=room.callingInfo(info)
                             sendDataToRoom(room,sendData(sendStr))
                             observer.updateContent(Rooms,roomIndex)
+                            if observer.debugMode:
+                                userIndex = room.findSocketIndex(sock)
+                                print "Room-%d %d call: %s"%(roomIndex, userIndex,sendStr)
                         elif connectState == "T":
                             room.setNewNames(int(info))
                             users = room.getNameStr(room.threeModeUsers)
@@ -181,10 +191,16 @@ if __name__ == "__main__":
                             sendStr = room.threeModeSetting()
                             sendDataToRoom(room,sendData(sendStr))
                             observer.updateContent(Rooms,roomIndex)
+                            if observer.debugMode:
+                                userIndex = room.findSocketIndex(sock)
+                                print "Room-%d %d three: %s"%(roomIndex, userIndex,sendStr)
                         elif connectState == "P":
                             sendStr=room.playingInfo(info)
                             sendDataToRoom(room,sendData(sendStr))
                             observer.updateContent(Rooms,roomIndex)
+                            if observer.debugMode:
+                                userIndex = room.findSocketIndex(sock)
+                                print "Room-%d %d play: %s"%(roomIndex, userIndex,sendStr)
                        
                     elif len(data) == 0:
                         # sock disconnect
@@ -206,9 +222,13 @@ if __name__ == "__main__":
                                 interruptList.remove(roomIndex)
                                 sendDataToRoom(room,sendData("D2"))
                                 removeRoomSockets(room)
+                                if observer.debugMode:
+                                    print "Room-%d destroy"%(roomIndex)
                             else:
                                 interruptList.append(roomIndex)
                                 sendDataToRoom(room,sendData("D0"))
+                                if observer.debugMode:
+                                    print "Room-%d waiting player"%(roomIndex)
                  
                 except:
                     continue

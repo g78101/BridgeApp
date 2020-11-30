@@ -12,6 +12,7 @@ class WebSocket:
     def __init__(self):
         self.server = None
         self.rooms = None
+        self.debugMode = False
 
     # Called for every client connecting (after handshake)
     def new_client(self,client, server):
@@ -35,6 +36,11 @@ class WebSocket:
         if len(message) > 200:
             message = message[:200]+'..'
         print("Client(%d) said: %s" % (client['id'], message))
+        if message == "debug":
+            self.debugMode = True
+        elif message == "normal":
+            self.debugMode = False
+
         print client
         # server.send_message(client,"Test")
 
