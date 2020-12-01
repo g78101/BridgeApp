@@ -130,10 +130,10 @@ if __name__ == "__main__":
                                     for recoverInfo in recoverList:
                                         sock.send(sendData(recoverInfo))
                                         if observer.debugMode:
-                                            userIndex = room.findSocketIndex(sock)
+                                            userIndex = interruptRoom.findSocketIndex(sock)
                                             print "Room-%d %d recoverInfo: %s"%(index, foundIndex,recoverInfo)
                                     reconnect = True
-                                    sendDataToRoom(room,sendData("D1"))
+                                    sendDataToRoom(interruptRoom,sendData("D1"))
                                     break
                             if reconnect == False:
                                 newRoom = True
