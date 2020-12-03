@@ -51,6 +51,7 @@ class WebSocket:
         self.server.set_fn_client_left(self.client_left)
         self.server.set_fn_message_received(self.message_received)
         server_thread = threading.Thread(target=self.server.run_forever)
+        server_thread.daemon = True
         server_thread.start()
 
     def stop(self):

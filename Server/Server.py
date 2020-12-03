@@ -6,6 +6,8 @@ import Room
 import Type
 import Observer
 import IpCheck
+import logging
+import sys
 
 def sendDataToRoom (room,message):
     for user in room.users:
@@ -58,6 +60,16 @@ def newPlayerEnterRoom(room,sock,name,uuid):
 
 if __name__ == "__main__":
     
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    output_file_handler = logging.FileHandler("output.log")
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter("%(asctime)s;%(message)s")
+    stdout_handler.setFormatter(formatter)
+    output_file_handler.setFormatter(formatter)
+    logger.addHandler(stdout_handler)
+    logger.addHandler(output_file_handler)
+
     # List to keep track of socket descriptors
     CONNECTION_LIST = []
     Rooms = []
@@ -69,17 +81,18 @@ if __name__ == "__main__":
     # this has no effect, why ?
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind(("0.0.0.0", PORT))
-    server_socket.listen(50)
+    server_socket.listen(5)
 
     # Add server socket to the list of readable connections
     CONNECTION_LIST.append(server_socket)
  
-    print "Socket server started on port " + str(PORT)
+    logger.info("Socket server started on port " + str(PORT))
 
     observer = Observer.WebSocket()
     observer.start()
 
     ipCheck = IpCheck.Manager()
+    ipCheck.logger = logger
     interruptList = []
 
     try:
@@ -91,9 +104,10 @@ if __name__ == "__main__":
             if sock == server_socket:
                 # Handle the case in which there is a new connection recieved through server_socket
                 sockfd, addr = server_socket.accept()
+                logger.info(addr)
                 if ipCheck.canConnection(addr[0]) or addr[0] == "127.0.0.1":
-                    print addr
                     CONNECTION_LIST.append(sockfd)
+                    logger.info("CONNECTION_LIST size: %d"%len(CONNECTION_LIST))
                     sockfd.send(sendData("S%d"%(Type.RoomState.connected.value)))
 
                     if len(Rooms) == 0 :
@@ -109,10 +123,9 @@ if __name__ == "__main__":
                     # a "Connection reset by peer" exception will be thrown
                     data = sock.recv(RECV_BUFFER)
                     
-                    # print("data:"+data)
                     if data:
                         if observer.debugMode:
-                            print "data: "+data
+                            logger.info("data:"+data)
                         connectState = data[0:1]
                         info = data[1:]
 
@@ -131,7 +144,7 @@ if __name__ == "__main__":
                                         sock.send(sendData(recoverInfo))
                                         if observer.debugMode:
                                             userIndex = interruptRoom.findSocketIndex(sock)
-                                            print "Room-%d %d recoverInfo: %s"%(index, foundIndex,recoverInfo)
+                                            logger.info("Room-%d %d recoverInfo: %s"%(index, foundIndex,recoverInfo))
                                     reconnect = True
                                     sendDataToRoom(interruptRoom,sendData("D1"))
                                     break
@@ -150,7 +163,7 @@ if __name__ == "__main__":
                                         if newPlayerEnterRoom(room,sock,name,uuid):
                                             observer.updateContent(Rooms,Rooms.index(room))
                                         if observer.debugMode:
-                                            print "Create Another New Room-%d for %s"%(Rooms.index(room), name)
+                                            logger.info("Create Another New Room-%d for %s"%(Rooms.index(room), name))
                                     else:
                                         sock.send("is Full")
                                         CONNECTION_LIST.remove(sock)
@@ -181,7 +194,7 @@ if __name__ == "__main__":
                             observer.updateContent(Rooms,roomIndex)
                             if observer.debugMode:
                                 userIndex = room.findSocketIndex(sock)
-                                print "Room-%d %d call: %s"%(roomIndex, userIndex,sendStr)
+                                logger.info("Room-%d %d call: %s"%(roomIndex, userIndex,sendStr))
                         elif connectState == "T":
                             room.setNewNames(int(info))
                             users = room.getNameStr(room.threeModeUsers)
@@ -193,18 +206,18 @@ if __name__ == "__main__":
                             observer.updateContent(Rooms,roomIndex)
                             if observer.debugMode:
                                 userIndex = room.findSocketIndex(sock)
-                                print "Room-%d %d three: %s"%(roomIndex, userIndex,sendStr)
+                                logger.info("Room-%d %d three: %s"%(roomIndex, userIndex,sendStr))
                         elif connectState == "P":
                             sendStr=room.playingInfo(info)
                             sendDataToRoom(room,sendData(sendStr))
                             observer.updateContent(Rooms,roomIndex)
                             if observer.debugMode:
                                 userIndex = room.findSocketIndex(sock)
-                                print "Room-%d %d play: %s"%(roomIndex, userIndex,sendStr)
+                                logger.info("Room-%d %d play: %s"%(roomIndex, userIndex,sendStr))
                        
                     elif len(data) == 0:
                         # sock disconnect
-                        print("sock disconnect")
+                        logger.info("sock disconnect")
                         sock.close()
                         roomIndex = findSocketInRoomIndex(sock)
                         CONNECTION_LIST.remove(sock)
@@ -223,16 +236,16 @@ if __name__ == "__main__":
                                 sendDataToRoom(room,sendData("D2"))
                                 removeRoomSockets(room)
                                 if observer.debugMode:
-                                    print "Room-%d destroy"%(roomIndex)
+                                    logger.info("Room-%d destroy"%(roomIndex))
                             else:
                                 interruptList.append(roomIndex)
                                 sendDataToRoom(room,sendData("D0"))
                                 if observer.debugMode:
-                                    print "Room-%d waiting player"%(roomIndex)
+                                    logger.info("Room-%d waiting player"%(roomIndex))
                  
                 except:
                     continue
     except IndexError as e:
-      print(type(e), str(e))
+      logger.info(type(e), str(e))
       observer.stop()
       server_socket.close()
