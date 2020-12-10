@@ -113,8 +113,11 @@ if __name__ == "__main__":
                     if len(Rooms) == 0 :
                         Rooms.append(Room.PokerRoom())
                 else:
-                    sockfd.send("Not Connecting")
-                    sockfd.close()
+                    try :
+                        sockfd.send("Not Connecting")
+                        sockfd.close()
+                    except :
+                        pass
             #Some incoming message from a client
             else:
                 # Data recieved from client, process it
