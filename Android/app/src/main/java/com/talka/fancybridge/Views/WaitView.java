@@ -94,8 +94,11 @@ public class WaitView extends ConstraintLayout {
             @Override
             public void onClick(View view) {
 
-                if(editText.getText().length() > 5) {
-                    AlertView.showViewSetText(getContext(),"Please enter less 5 length name");
+                Paint textPaint = editText.getPaint();
+                float width = textPaint.measureText(editText.getText().toString());
+
+                if(width > 290) {
+                    AlertView.showViewSetText(getContext(),"Please enter less length name");
                 }
                 else if(editText.getText().length() != 0) {
                     StateManager.getInstance().playInfo.name = ""+editText.getText();

@@ -88,8 +88,10 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
     // MARK: - Action
     @objc func confirmClicked(_ sender: UIButton) {
         
-        if textField.text!.count > 5 {
-            AlertView.showViewSetText("Please enter less 5 length name")
+        let textSize = NSString(string: textField.text!).size(withAttributes: [NSAttributedString.Key.font:textField.font!])
+        
+        if textSize.width > 100 {
+            AlertView.showViewSetText("Please enter less length name")
         }
         else if textField.text! != "" {
             stateManager.playInfo.name = textField.text!
