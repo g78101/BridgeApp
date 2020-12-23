@@ -30,6 +30,7 @@
 		3A8011CD2014772800BCFD00 /* StreamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8011CC2014772800BCFD00 /* StreamManager.swift */; };
 		3A92EA5F201832A3009C8F3D /* StateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A92EA5E201832A3009C8F3D /* StateManager.swift */; };
 		3AA6C69A202C579500035669 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA6C699202C579500035669 /* CardView.swift */; };
+		3ABEF7822593862500F1B81E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ABEF7812593862500F1B81E /* NetworkManager.swift */; };
 		3AD6BE7C221AAEA700AAB3E3 /* UIButton+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD6BE7B221AAEA700AAB3E3 /* UIButton+extension.swift */; };
 		3AD6BE7E221ABFAA00AAB3E3 /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD6BE7D221ABFAA00AAB3E3 /* InfoView.swift */; };
 		3AF08D5E21C24387005487D4 /* UIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF08D5D21C24387005487D4 /* UIAlertController.swift */; };
@@ -61,6 +62,7 @@
 		3A8011CC2014772800BCFD00 /* StreamManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamManager.swift; sourceTree = "<group>"; };
 		3A92EA5E201832A3009C8F3D /* StateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateManager.swift; sourceTree = "<group>"; };
 		3AA6C699202C579500035669 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		3ABEF7812593862500F1B81E /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		3AD6BE7B221AAEA700AAB3E3 /* UIButton+extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+extension.swift"; sourceTree = "<group>"; };
 		3AD6BE7D221ABFAA00AAB3E3 /* InfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		3AF08D5D21C24387005487D4 /* UIAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAlertController.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 		3A92EA5C201830F0009C8F3D /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3ABEF7812593862500F1B81E /* NetworkManager.swift */,
 				3A8011CC2014772800BCFD00 /* StreamManager.swift */,
 				3A70E95A201971F60073665C /* PokerManager.swift */,
 				3A92EA5E201832A3009C8F3D /* StateManager.swift */,
@@ -272,6 +275,7 @@
 				3A25EBBC23A8DA4B007DF15D /* LoadingView.swift in Sources */,
 				3A8011BD2014770900BCFD00 /* ViewController.swift in Sources */,
 				3A25EBBE23A8DF98007DF15D /* SelectPartnerView.swift in Sources */,
+				3ABEF7822593862500F1B81E /* NetworkManager.swift in Sources */,
 				3AF08D5E21C24387005487D4 /* UIAlertController.swift in Sources */,
 				3A61417A23ABB34C000BB4AC /* RecordView.swift in Sources */,
 				3A39AEEA22114D9700AE570A /* CardsView.swift in Sources */,

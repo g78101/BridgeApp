@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.talka.fancybridge.Manager.NetworkManager;
 import com.talka.fancybridge.Manager.StateManager;
 import com.talka.fancybridge.R;
 
@@ -97,7 +98,10 @@ public class WaitView extends ConstraintLayout {
                 Paint textPaint = editText.getPaint();
                 float width = textPaint.measureText(editText.getText().toString());
 
-                if(width > 290) {
+                if(!NetworkManager.getConnectivityConnected(getContext())) {
+                    AlertView.showViewSetText(getContext(),"No Internet");
+                }
+                else if(width > 290) {
                     AlertView.showViewSetText(getContext(),"Please enter less length name");
                 }
                 else if(editText.getText().length() != 0) {

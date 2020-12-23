@@ -90,7 +90,10 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
         
         let textSize = NSString(string: textField.text!).size(withAttributes: [NSAttributedString.Key.font:textField.font!])
         
-        if textSize.width > 100 {
+        if !NetworkManager.isConnectedToNetwork() {
+            AlertView.showViewSetText("No Internet")
+        }
+        else if textSize.width > 100 {
             AlertView.showViewSetText("Please enter less length name")
         }
         else if textField.text! != "" {
