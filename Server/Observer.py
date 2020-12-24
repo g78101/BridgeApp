@@ -12,22 +12,24 @@ class WebSocket:
     def __init__(self):
         self.server = None
         self.rooms = None
+        self.clientSelectedRoom = dict()
         self.debugMode = False
 
     # Called for every client connecting (after handshake)
     def new_client(self,client, server):
         print("New client connected and was given id %d" % client['id'])
 
+        self.clientSelectedRoom[client['id']]=-1
         if self.rooms == None or len(self.rooms) == 0:
             server.send_message(client,"0")
         else:
-            messageStr = self.getUpdateInfo(self.rooms[0])
-            server.send_message(client,messageStr)
-        pass
+            messageStr = self.getRoomInfo(self.rooms)
+            server.send_message(client,"R:"+messageStr)
 
     # Called for every client disconnecting
     def client_left(self,client, server):
         # print("Client(%d) disconnected" % client['id'])
+        self.clientSelectedRoom.pop(client['id'])
         print("Client disconnected")
         pass
 
@@ -40,9 +42,13 @@ class WebSocket:
             self.debugMode = True
         elif message == "normal":
             self.debugMode = False
-
-        print client
-        # server.send_message(client,"Test")
+        else:
+            roomIndex=int(message)
+            self.clientSelectedRoom[client['id']]=roomIndex
+            if roomIndex < len(self.rooms):
+                room = self.rooms[roomIndex]
+                messageStr = self.getUpdateInfo(self.rooms[roomIndex])
+                server.send_message(client,messageStr)
 
     def start(self):
         port=3344
@@ -57,10 +63,47 @@ class WebSocket:
     def stop(self):
         self.server.server_close()
 
+    def findClientFromId(self,clientId):
+        for client in self.server.clients:
+            if client['id'] == clientId:
+                return client
+        return None
+
+    def updateRooms(self,Rooms,removeIndex):
+        self.rooms=Rooms
+        messageStr = ""
+        if len(self.rooms) != 0:
+            messageStr = self.getRoomInfo(self.rooms)
+        self.server.send_message_to_all("R:"+messageStr)
+        if removeIndex != -1:
+            for key in self.clientSelectedRoom:
+                if self.clientSelectedRoom[key] > removeIndex:
+                    self.clientSelectedRoom[key]-=1
+                elif self.clientSelectedRoom[key] == removeIndex:
+                    self.clientSelectedRoom[key]=-1
+
     def updateContent(self,Rooms,roomIndex):
         self.rooms=Rooms
-        messageStr = self.getUpdateInfo(Rooms[roomIndex])
-        self.server.send_message_to_all(messageStr)
+        for clientId,selectedIndex in self.clientSelectedRoom.iteritems():
+            client = self.findClientFromId(clientId)
+            if client == None:
+                continue
+            if selectedIndex == roomIndex:
+                messageStr = self.getUpdateInfo(Rooms[roomIndex])
+                self.server.send_message(client,messageStr)
+
+    def getRoomInfo(self,rooms):
+        content = ""
+        for room in rooms:
+            names = ""
+            for index in range(4):
+                name = room.users[index].name
+                names += name
+                if index != 3:
+                    names += "、"
+            content += names + "|"
+        content = content[:-1]
+        return content
 
     def getUpdateInfo(self,room):
         # trump^{info}^{Name}^{call}^{three}^{play}^{card}

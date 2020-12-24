@@ -4,7 +4,9 @@
 	<meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>BridgeApp</title>
-  <script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link rel="stylesheet" href="FB-css/style.css">
 </head>
@@ -19,6 +21,13 @@
     <p class="empty-text">比賽尚未開始</p>
   </div>
   <div id="Main" class="content">
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+        <span class="room-name">請選擇房間：</span>
+      </button>
+      <ul class="dropdown-menu">
+      </ul>
+    </div>
     <table class="table-style">
       <thead>
         <tr class="table-head head-team">
@@ -89,11 +98,43 @@
     ws.onmessage = function (evt) {
       var dataReceive = evt.data;
       //console.log("資料已接收..."+dataReceive);
+      if( dataReceive == "0") {
+        document.getElementById('Empty').hidden=false
+        document.getElementById('Main').hidden=true
+        return
+      }
+      else if ( dataReceive[0] == "R") {
+        document.getElementById('Empty').hidden=true
+        document.getElementById('Main').hidden=false
 
-      if( dataReceive == "0") { 
-          document.getElementById('Empty').hidden=false
-          document.getElementById('Main').hidden=true
-          return
+        var datas = dataReceive.split(':');
+        var roomsMember = datas[1].split('|');
+        console.log("."+roomsMember);
+        var content = ""
+        if (roomsMember !="") {
+          for (var index=0; index < roomsMember.length; index++) {
+              content = content+'<li class="dropdown-item" href="#" value="'
+              content = content+index
+              content = content+'">房間'
+              content = content+' ： '
+              content = content+roomsMember[index]
+              content = content+'</a>'
+          }
+      }
+      else {
+        document.getElementsByClassName('btn btn-secondary dropdown-toggle')[0].innerText = "此房間已關閉"
+      }
+
+        document.getElementsByClassName('dropdown-menu')[0].innerHTML = content
+
+        $(function(){
+          $(".dropdown-menu li").click(function(){
+            console.log($(this).context.value);
+            ws.send($(this).context.value);
+            $(".dropdown-toggle").text($(this).text());
+          });
+        });
+        return
       }
 
       var datas = dataReceive.split('^');

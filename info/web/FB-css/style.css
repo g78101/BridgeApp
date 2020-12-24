@@ -6,16 +6,16 @@ body{
 	overflow-x: hidden;
 }
 .empty-img{
- width: 140px;
- height: 140px;
- text-align: center;
- margin: 10% auto 0;
- display: block;
+	width: 140px;
+	height: 140px;
+	text-align: center;
+	margin: 10% auto 0;
+	display: block;
 }
 .empty-text{
- margin: 30px auto 0;
- font-size: 24px;
- text-align: center;
+	margin: 30px auto 0;
+	font-size: 24px;
+	text-align: center;
 }
 .banner{
 	padding: 0px;
@@ -31,7 +31,7 @@ body{
 	background-image: url(../FB-image/banner.png);
 	background-size: cover;
 	position: relative;
-	overflow: hidden;
+	overflow-y: hidden;
 }
 .ying{
 	width: 240px;
@@ -57,6 +57,50 @@ body{
 }
 .content{
 	padding:30px 35px;
+}
+.content .dropdown{
+	margin: 0 auto 20px;
+}
+.dropdown .btn{
+	width: 100%;
+	background:white;
+	color: #333;
+	height: 40px;
+	text-align: left;
+	border: 1px solid #ccc;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding-right: 30px;
+}
+.dropdown-toggle::after{
+	float: right;
+	margin-top:10px;
+	border-top: 5px solid;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 0;
+	position: absolute;
+	right: 10px;
+}
+.dropdown-item:focus, .dropdown-item:hover{
+	background:rgba(0,166,155,0.2);
+	cursor: pointer;
+}
+.dropdown-item{
+	padding:8px 10px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.dropdown-menu.show{
+	width: 100%;
+}
+.show>.btn-secondary.dropdown-toggle:focus{
+	box-shadow: none;
+}
+.show>.btn-secondary.dropdown-toggle{
+	border:2px solid #00A69B;
+	background: white;
+	color: #333;
 }
 .table-style{
 	width: 100%;
@@ -198,11 +242,11 @@ td{
 .col-md-6,.col-md-12{
 	padding: 0;
 }
-@media screen and (max-width:414px){	
+@media screen and (max-width:414px){
 	.ying{
 		transform: rotate(-45deg);
 		width: 150px;
-	}
+	}		
 	@keyframes yingmove{
 		from{
 			left: -15px;
@@ -214,9 +258,9 @@ td{
 		}
 	}
 	.empty-img{
-  		width: 100px;
-  		height: 100px;
- 	}
+		width: 100px;
+		height: 100px;
+	}
 }
 @media screen and (min-width:415px) and (max-width:530px){	
 	.animation-hover{
@@ -293,7 +337,7 @@ td{
 @media screen and (min-width:997px) and (max-width:1880px){
 	.animation-hover{
 		height: 300px;
-	}		
+	}
 	@keyframes yingmove{
 		from{
 			left: -220px;

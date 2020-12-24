@@ -55,6 +55,7 @@ def newPlayerEnterRoom(room,sock,name,uuid):
             room.users[i].socket.send(sendData("H%s"%playCard))
         room.nextuser=random.randint(0,3)
         sendDataToRoom(room,sendData("S%d,%d,0"%(room.state.value,room.nextuser)))
+        observer.updateRooms(Rooms,-1)
         startGame = True
     return startGame    
 
@@ -110,8 +111,6 @@ if __name__ == "__main__":
                     logger.info("CONNECTION_LIST size: %d"%len(CONNECTION_LIST))
                     sockfd.send(sendData("S%d"%(Type.RoomState.connected.value)))
 
-                    if len(Rooms) == 0 :
-                        Rooms.append(Room.PokerRoom())
                 else:
                     try :
                         sockfd.send("Not Connecting")
@@ -156,7 +155,8 @@ if __name__ == "__main__":
                                 for room in Rooms:
                                     if room.isRoomFull() == False:
                                         if newPlayerEnterRoom(room,sock,name,uuid):
-                                            observer.updateContent(Rooms,Rooms.index(room))
+                                            #observer.updateContent(Rooms,Rooms.index(room))
+                                            pass
                                         newRoom = False
                                         break
                                 if newRoom:
@@ -164,7 +164,8 @@ if __name__ == "__main__":
                                         room = Room.PokerRoom()
                                         Rooms.append(room)
                                         if newPlayerEnterRoom(room,sock,name,uuid):
-                                            observer.updateContent(Rooms,Rooms.index(room))
+                                            #observer.updateContent(Rooms,Rooms.index(room))
+                                            pass
                                         if observer.debugMode:
                                             logger.info("Create Another New Room-%d for %s"%(Rooms.index(room), name))
                                     else:
@@ -190,6 +191,7 @@ if __name__ == "__main__":
                                         room.users[i].socket.send(sendData("H%s"%playCard))
                                 room.nextuser=random.randint(0,2)
                                 sendDataToRoom(room,sendData("S%d,%d,1"%(room.state.value,room.nextuser)))
+                                observer.updateRooms(Rooms,-1)
                                 observer.updateContent(Rooms,roomIndex)
                         elif connectState == "C":
                             sendStr=room.callingInfo(info)
@@ -238,6 +240,7 @@ if __name__ == "__main__":
                                 interruptList.remove(roomIndex)
                                 sendDataToRoom(room,sendData("D2"))
                                 removeRoomSockets(room)
+                                observer.updateRooms(Rooms,roomIndex)
                                 if observer.debugMode:
                                     logger.info("Room-%d destroy"%(roomIndex))
                             else:
