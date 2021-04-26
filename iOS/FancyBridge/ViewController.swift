@@ -29,6 +29,9 @@ class ViewController: UIViewController, StateManagerDelegate, UITextFieldDelegat
     // MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        }
         // Do any additional setup after loading the view, typically from a nib.
         view.addSubview(callView)
         view.addSubview(playView)
