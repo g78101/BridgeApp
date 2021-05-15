@@ -109,7 +109,6 @@
 
         var datas = dataReceive.split(':');
         var roomsMember = datas[1].split('|');
-        console.log("."+roomsMember);
         var content = ""
         if (roomsMember !="") {
           for (var index=0; index < roomsMember.length; index++) {
@@ -120,7 +119,7 @@
               content = content+roomsMember[index]
               content = content+'</a>'
           }
-      }
+        }
       else {
         document.getElementsByClassName('btn btn-secondary dropdown-toggle')[0].innerText = "此房間已關閉"
       }
@@ -129,7 +128,7 @@
 
         $(function(){
           $(".dropdown-menu li").click(function(){
-            console.log($(this).context.value);
+            console.log("selected room index:"+$(this).context.value);
             ws.send($(this).context.value);
             $(".dropdown-toggle").text($(this).text());
           });
@@ -152,7 +151,7 @@
       var winBount = datas[6].split('|');
       var flowers = datas[7].split('|');
       var cards = datas[8].split('|');
-      var showCard = (cards[0]!="");
+      var showCard = (cards[0]!="" || cards[1]!="" || cards[2]!="" || cards[3]!="");
 
       var trumpHtml=""
       var showMain=(names[0]!="")
@@ -231,20 +230,18 @@
       content = content +'<tr class="total-tr">\n<td colspan="4">\n<div>各花色總數:</div>\n<div class="total-card">\n<div class="total-div">\n<img src="FB-image/card-diamand.png" class="total-img">\n<span>X '+flowers[0]+'</span>\n</div>\n<div class="total-div">\n<img src="FB-image/card-clubs.png" class="total-img">\n<span>X '+flowers[1]+'</span>\n</div>\n<div class="total-div">\n<img src="FB-image/card-heart.png" class="total-img">\n<span>X '+flowers[2]+'</span>\n</div>\n<div class="total-div">\n<img src="FB-image/card-spade.png" class="total-img">\n<span>X '+flowers[3]+'</span>\n</div>\n</div>\n</td>\n</tr>'
 
       playTable.innerHTML = content
-      if(showCard) {
-        for(var i=0; i < 4 ; ++i) {
-          handCard = document.getElementsByClassName('col-md-6 pull-left people-card')[i]
-          handCard.hidden=!showCard;
-	
-          var content = '<p>'+names[i]+'</p>'
-	  var cardValue = cards[i].split(',');
-	  if(cardValue[0]) {
-            for(var j=0; j< cardValue.length; ++j) {
-              content = content + '<div class="card">' + playPoker(false,cardValue[j]) + '</div>'
-            }
-	  }
+      for(var i=0; i < 4 ; ++i) {
+        handCard = document.getElementsByClassName('col-md-6 pull-left people-card')[i]
+        handCard.hidden=!showCard;
+	  
+        var content = '<p>'+names[i]+'</p>'
+	      var cardValue = cards[i].split(',');
+	      if(cardValue[0]) {
+          for(var j=0; j< cardValue.length; ++j) {
+            content = content + '<div class="card">' + playPoker(false,cardValue[j]) + '</div>'
+          }
+	      }
           handCard.innerHTML = content
-        }
       }
     };
 
