@@ -13,9 +13,14 @@ The trunp:</br>
 
 ### Server Side:
 
-1. in terminal: **cd {Server}**
-2. in terminal: **python Server.py**
-	</br>*( sample of observer html at info/ )*
+* 	From Container:  
+    1. docker pull g78101/bridge-server
+    2. docker run --name bridge-server -p 3344:3344 -p 8888:8888 -d g78101/bridge-server
+
+* 	From Code:
+    1. in terminal: **cd {Server}**
+    2. in terminal: **python Server.py**
+     	</br>*( sample of observer html at info/ )*
 
 ### iOS Side:
 1. open **FancyBridge.xcodeproj**
@@ -43,3 +48,5 @@ The Screenshots PlayState
 # Reference
 * 	PokerBridge-Qt:</br>
 &nbsp;&nbsp;https://github.com/g78101/PokerBridge-Qt</br>
+* 	g78101/bridge-server:</br>
+&nbsp;&nbsp;https://hub.docker.com/r/g78101/bridge-server</br>
